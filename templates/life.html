@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personalized Lifestyle Plan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: radial-gradient(#dbeafe 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Smooth fade-in for result */
+    #result.show {
+      animation: fadeIn 0.7s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen flex items-center justify-center p-6">
+
+  <div class="max-w-lg w-full bg-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20">
+    <h2 class="text-3xl font-extrabold mb-6 text-center text-blue-800 tracking-wide">🌿 Personalized Lifestyle Plan</h2>
+
+    <form id="planForm" class="space-y-5">
+      <div>
+        <label for="age" class="block font-semibold mb-1 text-gray-700">Age</label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          min="1"
+          max="120"
+          placeholder="Enter your age"
+          class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="bmi" class="block font-semibold mb-1 text-gray-700">BMI (Body Mass Index)</label>
+        <input
+          type="number"
+          step="0.1"
+          id="bmi"
+          name="bmi"
+          min="10"
+          max="50"
+          placeholder="Enter your BMI"
+          class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="activity" class="block font-semibold mb-1 text-gray-700">Physical Activity Level</label>
+        <select
+          id="activity"
+          name="activity"
+          class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          required
+        >
+          <option value="" disabled selected>Select activity level</option>
+          <option value="low">Low (Sedentary)</option>
+          <option value="moderate">Moderate (3-5 days/week)</option>
+          <option value="high">High (Daily or intense exercise)</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2.5 rounded-xl shadow-lg hover:scale-105 transition-transform duration-200"
+      >
+        🔍 Generate Plan
+      </button>
+    </form>
+
+    <div id="result" class="mt-8 p-5 bg-white/80 border border-blue-200 rounded-xl shadow-lg hidden"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('planForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const age = Number(form.age.value);
+      const bmi = Number(form.bmi.value);
+      const activity = form.activity.value;
+
+      let dietTips = '';
+      let exerciseTips = '';
+      let stressTips = '';
+
+      // Diet tips
+      if (bmi >= 30) {
+        dietTips = 'Focus on a low-calorie, nutrient-dense diet rich in vegetables, whole grains, and lean proteins.';
+      } else if (bmi >= 25) {
+        dietTips = 'Maintain a balanced diet with moderate portions, including plenty of fiber and healthy fats.';
+      } else {
+        dietTips = 'Eat a variety of foods to meet nutritional needs and maintain a healthy weight.';
+      }
+
+      // Exercise tips
+      if (activity === 'low') {
+        exerciseTips = 'Start with light activities like walking 30 mins daily, gradually increasing intensity.';
+      } else if (activity === 'moderate') {
+        exerciseTips = 'Incorporate cardio, strength, and flexibility exercises 3-5 times a week.';
+      } else {
+        exerciseTips = 'Maintain your high activity level, and ensure proper rest and recovery.';
+      }
+
+      // Stress management tips
+      if (age >= 50) {
+        stressTips = 'Practice mindfulness, meditation, or yoga regularly to reduce stress and support heart health.';
+      } else {
+        stressTips = 'Engage in hobbies, social activities, and relaxation techniques to manage stress effectively.';
+      }
+
+      const planHtml = `
+        <h3 class="text-2xl font-semibold mb-4 text-blue-700">🧠 Your Custom Lifestyle Plan</h3>
+        <ul class="list-disc list-inside space-y-2 text-gray-800">
+          <li><strong>🍽️ Diet:</strong> ${dietTips}</li>
+          <li><strong>🏃 Exercise:</strong> ${exerciseTips}</li>
+          <li><strong>🧘 Stress Management:</strong> ${stressTips}</li>
+        </ul>
+      `;
+
+      resultDiv.innerHTML = planHtml;
+      resultDiv.classList.remove('hidden');
+      resultDiv.classList.add('show');
+    });
+  </script>
+</body>
+</html>

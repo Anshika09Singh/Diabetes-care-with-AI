@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Chatbot</title>
+    <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #4a90e2, #50e3c2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #333;
+    }
+    .chat-container {
+        background-color: #ffffffcc;
+        border-radius: 15px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .chat-header {
+        background: #007bff;
+        color: #fff;
+        padding: 18px 20px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-align: center;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+        letter-spacing: 0.05em;
+    }
+    .chat-messages {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        scrollbar-width: thin;
+        scrollbar-color: #007bff #e1e1e1;
+    }
+    .chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+        background-color: #007bff;
+        border-radius: 20px;
+    }
+    .message {
+        margin-bottom: 14px;
+        display: flex;
+        animation: fadeIn 0.3s ease forwards;
+    }
+    .message.user {
+        justify-content: flex-end;
+    }
+    .message.bot {
+        justify-content: flex-start;
+    }
+    .message-bubble {
+        max-width: 70%;
+        padding: 14px 20px;
+        border-radius: 25px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, #4caf50, #81c784);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+    }
+    .message.bot .message-bubble {
+        background: #e0e0e0;
+        color: #333;
+        border-bottom-left-radius: 4px;
+    }
+    .chat-input {
+        display: flex;
+        padding: 15px 20px;
+        border-top: 1px solid #ddd;
+        background-color: #fff;
+    }
+    .chat-input input[type="text"] {
+        flex-grow: 1;
+        padding: 14px 18px;
+        border: 2px solid #007bff;
+        border-radius: 25px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+    .chat-input input[type="text"]:focus {
+        border-color: #0056b3;
+        box-shadow: 0 0 8px #0056b3aa;
+    }
+    .chat-input button {
+        margin-left: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 14px 24px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
+    }
+    .chat-input button:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 16px rgba(0, 86, 179, 0.7);
+    }
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+</style>
+
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Diabetes Expert Chatbot
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                <div class="message-bubble">Hello! I'm here to help you understand diabetes and answer your questions. How can I assist you today?</div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const message = userInput.value.trim();
+
+            if (message === '') {
+                return;
+            }
+
+            // Display user message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user');
+            userMessageDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
+            chatMessages.appendChild(userMessageDiv);
+
+            // Clear input
+            userInput.value = '';
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Show a "typing" indicator or a temporary message
+            const thinkingMessageDiv = document.createElement('div');
+            thinkingMessageDiv.classList.add('message', 'bot');
+            thinkingMessageDiv.innerHTML = `<div class="message-bubble">Thinking...</div>`;
+            chatMessages.appendChild(thinkingMessageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                // Remove the "thinking" message
+                chatMessages.removeChild(thinkingMessageDiv);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Display bot response
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.classList.add('message', 'bot');
+                botMessageDiv.innerHTML = `<div class="message-bubble">${data.reply}</div>`;
+                chatMessages.appendChild(botMessageDiv);
+
+            } catch (error) {
+                console.error('Error:', error);
+                // Remove the "thinking" message and display an error
+                chatMessages.removeChild(thinkingMessageDiv);
+                const errorMessageDiv = document.createElement('div');
+                errorMessageDiv.classList.add('message', 'bot');
+                errorMessageDiv.innerHTML = `<div class="message-bubble">Sorry, I couldn't get a response. Please try again.</div>`;
+                chatMessages.appendChild(errorMessageDiv);
+            } finally {
+                // Scroll to bottom after response
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Send message on Enter key press
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial scroll to bottom in case of pre-existing messages
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
+</body>
+</html>

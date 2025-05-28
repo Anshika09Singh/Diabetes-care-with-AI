@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diabetes Care Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 3D Text Effect */
+    .text-3d {
+      color: #2563eb; /* Tailwind blue-600 */
+      text-shadow:
+        1px 1px 0 #1e40af,
+        2px 2px 0 #1e40af,
+        3px 3px 0 #1e40af,
+        4px 4px 10px rgba(30, 64, 175, 0.7);
+      transform-style: preserve-3d;
+      animation: textFloat 3s ease-in-out infinite alternate;
+    }
+    @keyframes textFloat {
+      0% {
+        transform: translateZ(0) translateY(0);
+        text-shadow:
+          1px 1px 0 #1e40af,
+          2px 2px 0 #1e40af,
+          3px 3px 0 #1e40af,
+          4px 4px 10px rgba(30, 64, 175, 0.7);
+      }
+      100% {
+        transform: translateZ(15px) translateY(-8px);
+        text-shadow:
+          2px 2px 2px #1e40af,
+          4px 4px 4px #1e40af,
+          6px 6px 6px #1e40af,
+          8px 8px 20px rgba(30, 64, 175, 0.9);
+      }
+    }
+
+    /* Big animated headline */
+    .animate-scale-up {
+      animation: scaleUp 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes scaleUp {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1) rotateX(5deg) rotateY(5deg); }
+    }
+
+    /* Pulse buttons */
+    .btn-3d {
+      perspective: 500px;
+      display: inline-block;
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    .btn-3d:hover {
+      transform: translateZ(20px) rotateX(10deg) rotateY(-10deg);
+      box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen font-sans bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-4xl font-extrabold tracking-wide text-white text-3d">🩺 Diabetes Care</h1>
+      <nav>
+        <ul class="flex space-x-6 text-lg font-semibold">
+          <li><a href="/index" class="hover:text-blue-300 transition">Prediction</a></li>
+          <li><a href="/life" class="hover:text-blue-300 transition">Lifestyle Check</a></li>
+          <li><a href="/chatbot" class="hover:text-blue-300 transition">Chatbot</a></li>
+          <li><a href="/explore" class="hover:text-blue-300 transition">Explore Data</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-grow flex flex-col items-center justify-center px-6 py-32 relative bg-gradient-to-br from-blue-200 to-white overflow-hidden">
+    <!-- Decorative Background Circles -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-blue-300 rounded-full opacity-30 -z-10 blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full opacity-30 -z-10 blur-3xl animate-pulse"></div>
+
+    <div class="text-center max-w-4xl">
+      <h2 class="text-7xl font-extrabold leading-tight mb-6 drop-shadow-lg text-3d animate-scale-up">
+        Welcome to <span class="text-blue-800">Diabetes Care</span>
+      </h2>
+      <p class="text-2xl text-gray-700 mb-12 max-w-3xl mx-auto">
+        Your one-stop solution for <span class="font-semibold text-blue-900">prediction</span>, <span class="text-green-700 font-semibold">lifestyle advice</span>, AI-powered chatbot, and real-time health data insights.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-6 text-xl font-semibold">
+        <a href="/index" class="btn-3d bg-blue-700 hover:bg-blue-800 text-white px-10 py-4 rounded-lg shadow-lg transition transform">Prediction</a>
+        <a href="/life" class="btn-3d bg-green-700 hover:bg-green-800 text-white px-10 py-4 rounded-lg shadow-lg transition transform">Lifestyle Check</a>
+        <a href="/chatbot" class="btn-3d bg-purple-700 hover:bg-purple-800 text-white px-10 py-4 rounded-lg shadow-lg transition transform">Chatbot</a>
+        <a href="/explore" class="btn-3d bg-indigo-700 hover:bg-indigo-800 text-white px-10 py-4 rounded-lg shadow-lg transition transform">Explore Data</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 p-8 text-center">
+    <p class="text-lg">&copy; 2025 <span class="font-semibold text-white">Diabetes Care Platform</span>. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

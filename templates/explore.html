@@ -1,0 +1,217 @@
+<!-- templates/explore.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Data Explorer | Diabetes Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* Background with medical-themed gentle gradient and subtle pattern overlay */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #d9e9f9, #ffffff);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 123, 255, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(0, 123, 255, 0.07) 0%, transparent 50%);
+            color: #1c2833;
+        }
+
+        header,
+        footer {
+            background-color: #0d6efd;
+            color: white;
+            padding: 1.25rem 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.5);
+            font-weight: 600;
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 900px;
+            margin: 2rem auto 3rem auto;
+            padding: 2.5rem 3rem;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.75rem;
+            margin: 0;
+            letter-spacing: 0.05em;
+        }
+
+        h2 {
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+            color: #0b3559;
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 0.3rem;
+            user-select: none;
+        }
+
+        .card {
+            padding: 1.8rem 2rem;
+            border-radius: 14px;
+            box-shadow: 0 15px 25px rgba(13, 110, 253, 0.15);
+            background: #f9fbff;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 25px 45px rgba(13, 110, 253, 0.25);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.1);
+            user-select: none;
+        }
+
+        a.btn-back {
+            align-self: center;
+            padding: 0.7rem 1.6rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(13, 110, 253, 0.3);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        a.btn-back:hover,
+        a.btn-back:focus {
+            background-color: #0842c7;
+            box-shadow: 0 12px 28px rgba(8, 66, 199, 0.45);
+            transform: translateY(-3px);
+            outline: none;
+        }
+
+        /* Prediction Result Box */
+        .prediction-result {
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+            padding: 1.8rem 2.5rem;
+            background: #e6f0ff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0b3559;
+            text-align: center;
+            user-select: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .prediction-result:hover {
+            background-color: #d0e4ff;
+            box-shadow: 0 28px 50px rgba(13, 110, 253, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            main {
+                padding: 2rem 1.5rem;
+                margin: 1.5rem auto 2.5rem auto;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            a.btn-back {
+                font-size: 1rem;
+                padding: 0.6rem 1.3rem;
+                border-radius: 8px;
+            }
+
+            .prediction-result {
+                font-size: 1.1rem;
+                padding: 1.3rem 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 1.5rem 1rem;
+                margin: 1rem auto 2rem auto;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            a.btn-back {
+                font-size: 0.95rem;
+                padding: 0.5rem 1.2rem;
+            }
+
+            .prediction-result {
+                font-size: 1rem;
+                padding: 1rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>📊 Diabetes Data Explorer</h1>
+    </header>
+
+    <main>
+        <!-- Prediction result box example -->
+        {% if prediction %}
+        <div class="prediction-result" role="region" aria-live="polite" aria-atomic="true">
+            {{ prediction }}
+        </div>
+        {% endif %}
+
+        <div class="card" role="region" aria-label="Correlation Heatmap">
+            <h2>Correlation Heatmap</h2>
+            <img src="data:image/png;base64,{{ heatmap_url }}" alt="Correlation Heatmap" />
+        </div>
+
+        <div class="card" role="region" aria-label="Histogram of Glucose">
+            <h2>Histogram: Glucose</h2>
+            <div>
+                {{ hist_html|safe }}
+            </div>
+        </div>
+
+        <a href="/" class="btn-back" aria-label="Back to Prediction Page">⬅ Back to Prediction</a>
+    </main>
+
+    <footer>
+        <small>Diabetes Prediction Project &copy; 2025</small>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
