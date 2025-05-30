@@ -3,3 +3,4 @@ gunicorn
 python-dotenv
 requests
 openai
+numpy
