@@ -17,8 +17,9 @@ from datetime import datetime
 from flask_cors import CORS
 
 # Google GenAI imports
-from google import genai
-from google.genai import types
+from google.ai import generativelanguage as genai
+from google.ai.generativelanguage import types
+
 
 app = Flask(__name__)
 CORS(app)
