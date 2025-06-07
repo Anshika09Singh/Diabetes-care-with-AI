@@ -1,2 +1,9 @@
-.env
+# .gitignore
+venv/
 __pycache__/
+*.pyc
+*.log
+*.sqlite3
+*.env
+.DS_Store
+*.ipynb_checkpoints
