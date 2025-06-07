@@ -2,6 +2,9 @@
 
 Welcome to the **Diabetes Care Home** web application — your comprehensive platform for managing and understanding diabetes better.
 
+Live DEMO:-
+https://diabetes-care-with-ai-5-nd7x.onrender.com
+
 This project provides users with the following features:
 - **Diabetes Prediction:** A tool to help users assess their risk based on inputs.
 - **Lifestyle Check:** Personalized lifestyle advice to help manage or prevent diabetes.
