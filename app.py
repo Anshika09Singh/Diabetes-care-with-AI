@@ -16,10 +16,8 @@ import sys
 from datetime import datetime
 from flask_cors import CORS
 
-# Google GenAI imports
-from google.ai import generativelanguage as genai
-from google.ai.generativelanguage import types
-
+# ✅ Correct Gemini import
+import google.generativeai as genai
 
 app = Flask(__name__)
 CORS(app)
@@ -54,43 +52,22 @@ except Exception as e:
     df = None
 
 
-# --- Gemini AI Chat ---
+# --- Gemini AI Chat Function ---
 def get_gemini_response(user_message):
     try:
-        api_key = os.environ.get("GEMINI_API_KEY")
+        api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             logging.error("GEMINI_API_KEY not set.")
             return "Error: Gemini API Key not found."
 
-        client = genai.Client(api_key=api_key)
-        model_name = "gemini-1.5-flash"
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
-        initial_content_user = types.Content(
-            role="user",
-            parts=[types.Part.from_text(text="You are a helpful diabetes assistant...")]
-        )
-        initial_content_model = types.Content(
-            role="model",
-            parts=[types.Part.from_text(text="Hello! I'm your diabetes assistant.")]
-        )
-
-        user_current_message = types.Content(
-            role="user",
-            parts=[types.Part.from_text(text=user_message)]
-        )
-
-        contents = [initial_content_user, initial_content_model, user_current_message]
-        config = types.GenerateContentConfig(response_mime_type="text/plain")
-
-        full_response = ""
-        for chunk in client.models.generate_content_stream(
-            model=model_name,
-            contents=contents,
-            config=config,
-        ):
-            full_response += chunk.text
-        return full_response
-
+        chat = model.start_chat(history=[
+            {"role": "user", "parts": ["You're a helpful diabetes assistant."]}
+        ])
+        response = chat.send_message(user_message)
+        return response.text
     except Exception as e:
         logging.error(f"Gemini error: {e}")
         return "Sorry, Gemini service is unavailable right now."
