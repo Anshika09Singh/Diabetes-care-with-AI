@@ -193,10 +193,63 @@ def predict():
         features = [float(request.form.get(f, 0)) for f in expected_features]
 
         if scaler is None or model is None:
-            return render_template('index.html', prediction_text=_("Model not available."))
+            return render_template(
+                'index.html',
+                prediction_text=_("Model not available.")
+            )
 
         final_input = scaler.transform([features])
+
+        # 🔹 Prediction
         prediction = model.predict(final_input)
+        result = _("Diabetic") if prediction[0] == 1 else _("Not Diabetic")
+
+        # 🔹 Confidence (safe usage)
+        confidence = None
+        if hasattr(model, "predict_proba"):
+            probs = model.predict_proba(final_input)[0]
+            confidence = round(max(probs) * 100, 2)
+
+        # 🔹 Explainability (rule-based, lightweight)
+        glucose = features[1]
+        bmi = features[5]
+        age = features[7]
+
+        explanations = []
+
+        if glucose > 140:
+            explanations.append(_("High glucose level"))
+        if bmi > 30:
+            explanations.append(_("High BMI"))
+        if age > 45:
+            explanations.append(_("Age above 45"))
+
+        explanation_text = (
+            _("Factors influencing this prediction: ") + ", ".join(explanations)
+            if explanations else _("No major risk factors detected")
+        )
+
+        return render_template(
+            'index.html',
+            prediction_text=_("Prediction: %(result)s", result=result),
+            confidence_text=_("Confidence: %(conf)s%%", conf=confidence) if confidence else None,
+            explanation_text=explanation_text
+        )
+
+    except Exception as e:
+        logging.error(f"Predict error: {e}")
+        return render_template(
+            'index.html',
+            prediction_text=_("Error during prediction.")
+        )
+
+
+# Confidence score (if model supports it)
+        confidence = None
+        if hasattr(model, "predict_proba"):
+        probability = model.predict_proba(final_input)[0]
+        confidence = round(max(probability) * 100, 2)
+
         result = _("Diabetic") if prediction[0] == 1 else _("Not Diabetic")
 
         return render_template('index.html', prediction_text=_("Prediction: %(result)s", result=result))
