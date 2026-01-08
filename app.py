@@ -583,13 +583,16 @@ def posts_api():
         except ValueError:
             return jsonify({"error": "per_page must be between 1 and 50"}), 400
 
-        # Parse dates
+        # Parse dates (make timezone-aware for consistent comparison)
         start_date = None
         end_date = None
 
         if start_date_str:
             try:
                 start_date = datetime.fromisoformat(start_date_str)
+                # Make timezone-aware (UTC) for consistent comparison
+                if start_date.tzinfo is None:
+                    start_date = start_date.replace(tzinfo=timezone.utc)
             except ValueError:
                 return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
 
@@ -598,6 +601,9 @@ def posts_api():
                 end_date = datetime.fromisoformat(end_date_str)
                 # Set end_date to end of day for inclusive filtering
                 end_date = end_date.replace(hour=23, minute=59, second=59)
+                # Make timezone-aware (UTC) for consistent comparison
+                if end_date.tzinfo is None:
+                    end_date = end_date.replace(tzinfo=timezone.utc)
             except ValueError:
                 return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
 
@@ -613,6 +619,7 @@ def posts_api():
 
         # Paginate results
         result = paginate_posts(filtered_posts, page=page, per_page=per_page)
+
 
         return jsonify({
             'posts': result['posts'],
