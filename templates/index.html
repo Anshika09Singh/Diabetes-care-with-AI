@@ -5,199 +5,417 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ _('Diabetes Prediction') }}</title>
-  <link rel="icon" href="{{ url_for('static', filename='stethoscope.png') }}" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body {
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-      background-repeat: repeat;
-      background-size: 200px 200px;
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    .lang-dropdown { max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out; }
-    .lang-dropdown.show { max-height: 300px; }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6366f1;
+    }
+    .form-input {
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-card {
+      animation: slideUp 0.5s ease-out forwards;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tooltip {
+      position: relative;
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip-text {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      z-index: 10;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      width: 200px;
+      text-align: center;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+    .tooltip-text::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #1e293b;
+    }
+    .btn-primary {
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    }
+    .info-card {
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
     @media print {
       body * { visibility: hidden; }
       #printableReport, #printableReport * { visibility: visible; }
       #printableReport { position: absolute; left: 0; top: 0; width: 100%; }
       .no-print { display: none !important; }
     }
+    .lang-dropdown { display: none; }
+    .lang-dropdown.show { display: block; }
   </style>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 flex flex-col font-sans">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 flex flex-col font-sans">
   {% include 'navbar.html' %}
 
-  <main class="flex-grow flex items-center justify-center p-8">
-    <section class="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl max-w-lg w-full p-12 space-y-10">
-      <header>
-        <h1 class="text-4xl font-extrabold text-blue-900 flex items-center gap-4 mb-12 select-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-11 w-11 text-blue-700" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 12h6m-3-3v6m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v9a2 2 0 002 2z" />
-          </svg>
-          {{ _('Diabetes Prediction') }}
-        </h1>
-      </header>
+  <!-- Hero Section -->
+  <section class="relative py-12 px-6 text-center text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute top-10 left-20 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-20 w-80 h-80 bg-purple-500 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-3xl mx-auto fade-in">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+        {{ _('Diabetes Prediction') }}
+      </h1>
+      <p class="text-lg text-indigo-200 max-w-xl mx-auto">
+        {{ _('Get an AI-powered prediction based on your health metrics. Enter your details below for instant results.') }}
+      </p>
+    </div>
+  </section>
 
-      <form action="/predict" method="post" class="space-y-8" novalidate>
-        <div>
-          <label for="Pregnancies" class="block text-blue-800 font-semibold mb-2">Pregnancies</label>
-          <input type="number" id="Pregnancies" name="Pregnancies" placeholder="e.g., 2" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
+  <main class="flex-grow px-6 pb-16 -mt-4">
+    <div class="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+      
+      <!-- Form Section -->
+      <div class="lg:col-span-2 fade-in">
+        <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-10">
+          <form action="/predict" method="post" id="predictionForm" class="space-y-6" novalidate>
+            <div class="grid md:grid-cols-2 gap-6">
+              
+              <!-- Pregnancies -->
+              <div class="relative tooltip">
+                <label for="Pregnancies" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Pregnancies') }}
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="Pregnancies" name="Pregnancies" placeholder="e.g., 2" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Number of times pregnant') }}</span>
+              </div>
+
+              <!-- Glucose -->
+              <div class="relative tooltip">
+                <label for="Glucose" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Glucose Level') }} (mg/dL)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="Glucose" name="Glucose" placeholder="e.g., 130" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Plasma glucose concentration (2 hours after glucose tolerance test)') }}</span>
+              </div>
+
+              <!-- Blood Pressure -->
+              <div class="relative tooltip">
+                <label for="BloodPressure" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Blood Pressure') }} (mm Hg)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="BloodPressure" name="BloodPressure" placeholder="e.g., 70" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Diastolic blood pressure measurement') }}</span>
+              </div>
+
+              <!-- Skin Thickness -->
+              <div class="relative tooltip">
+                <label for="SkinThickness" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Skin Thickness') }} (mm)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="SkinThickness" name="SkinThickness" placeholder="e.g., 32" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Triceps skin fold thickness') }}</span>
+              </div>
+
+              <!-- Insulin -->
+              <div class="relative tooltip">
+                <label for="Insulin" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Insulin Level') }} (mu U/ml)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="Insulin" name="Insulin" placeholder="e.g., 85" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('2-Hour serum insulin level') }}</span>
+              </div>
+
+              <!-- BMI -->
+              <div class="relative tooltip">
+                <label for="BMI" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('BMI') }} (kg/m²)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                  </span>
+                  <input type="number" step="0.1" id="BMI" name="BMI" placeholder="e.g., 28.5" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Body Mass Index (weight in kg / height in m²)') }}</span>
+              </div>
+
+              <!-- Diabetes Pedigree Function -->
+              <div class="relative tooltip">
+                <label for="DiabetesPedigreeFunction" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Diabetes Pedigree Function') }}
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                  </span>
+                  <input type="number" step="0.01" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction"
+                    placeholder="e.g., 0.45" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Genetic influence score based on family history (0.0 - 2.5)') }}</span>
+              </div>
+
+              <!-- Age -->
+              <div class="relative tooltip">
+                <label for="Age" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Age') }} (years)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="Age" name="Age" placeholder="e.g., 35" required min="0"
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+                <span class="tooltip-text">{{ _('Your current age in years') }}</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn"
+              class="btn-primary w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl py-4 mt-6 flex justify-center items-center gap-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              </svg>
+              {{ _('Get Prediction') }}
+            </button>
+          </form>
+
+          <!-- Result Section -->
+          {% if prediction_text %}
+          <div id="predictionResult" class="result-card mt-8 p-6 rounded-2xl {% if 'Diabetic' in prediction_text and 'Not' not in prediction_text %}bg-gradient-to-r from-red-500 to-pink-500{% else %}bg-gradient-to-r from-green-500 to-emerald-500{% endif %} text-white" role="alert">
+            <div class="flex items-center gap-4">
+              {% if 'Diabetic' in prediction_text and 'Not' not in prediction_text %}
+              <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              {% else %}
+              <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              {% endif %}
+              <div>
+                <h3 class="text-xl font-bold">{{ _('Prediction Result') }}</h3>
+                <p class="text-2xl font-extrabold mt-1">{{ prediction_text }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="mt-6 flex flex-wrap justify-center gap-4 no-print">
+            <button onclick="printReport()" 
+              class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all duration-300 hover:-translate-y-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+              </svg>
+              {{ _('Print Report') }}
+            </button>
+            <button onclick="downloadPDF()" 
+              class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all duration-300 hover:-translate-y-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              {{ _('Download PDF') }}
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Info Sidebar -->
+      <div class="space-y-6 fade-in" style="animation-delay: 0.2s;">
+        <!-- Info Cards -->
+        <div class="glass-card info-card rounded-2xl p-6">
+          <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-2">{{ _('How It Works') }}</h3>
+          <p class="text-gray-600 text-sm">{{ _('Our AI model analyzes 8 key health indicators to predict diabetes risk with high accuracy.') }}</p>
         </div>
 
-        <div>
-          <label for="Glucose" class="block text-blue-800 font-semibold mb-2">Glucose Level</label>
-          <input type="number" id="Glucose" name="Glucose" placeholder="e.g., 130" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
+        <div class="glass-card info-card rounded-2xl p-6">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-2">{{ _('Privacy First') }}</h3>
+          <p class="text-gray-600 text-sm">{{ _('Your data is processed locally and never stored. We prioritize your privacy and security.') }}</p>
         </div>
 
-        <div>
-          <label for="BloodPressure" class="block text-blue-800 font-semibold mb-2">Blood Pressure</label>
-          <input type="number" id="BloodPressure" name="BloodPressure" placeholder="e.g., 70" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
+        <div class="glass-card info-card rounded-2xl p-6">
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-2">{{ _('Medical Disclaimer') }}</h3>
+          <p class="text-gray-600 text-sm">{{ _('This tool is for informational purposes only. Always consult a healthcare professional for diagnosis.') }}</p>
         </div>
 
-        <div>
-          <label for="SkinThickness" class="block text-blue-800 font-semibold mb-2">Skin Thickness</label>
-          <input type="number" id="SkinThickness" name="SkinThickness" placeholder="e.g., 32" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
+        <!-- Quick Links -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">{{ _('Quick Links') }}</h3>
+          <div class="space-y-3">
+            <a href="/life" class="flex items-center gap-3 p-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition text-indigo-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+              {{ _('Lifestyle Check') }}
+            </a>
+            <a href="/explore" class="flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:bg-purple-100 transition text-purple-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              {{ _('Explore Data') }}
+            </a>
+            <a href="/chatbot" class="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition text-emerald-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              {{ _('AI Chatbot') }}
+            </a>
+          </div>
         </div>
+      </div>
+    </div>
+  </main>
 
-        <div>
-          <label for="Insulin" class="block text-blue-800 font-semibold mb-2">Insulin Level</label>
-          <input type="number" id="Insulin" name="Insulin" placeholder="e.g., 85" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
-        </div>
-
-        <div>
-          <label for="BMI" class="block text-blue-800 font-semibold mb-2">BMI</label>
-          <input type="number" step="0.1" id="BMI" name="BMI" placeholder="e.g., 28.5" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
-        </div>
-
-        <div>
-          <label for="DiabetesPedigreeFunction" class="block text-blue-800 font-semibold mb-2">Diabetes Pedigree
-            Function</label>
-          <input type="number" step="0.01" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction"
-            placeholder="e.g., 0.45" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
-        </div>
-
-        <div>
-          <label for="Age" class="block text-blue-800 font-semibold mb-2">Age</label>
-          <input type="number" id="Age" name="Age" placeholder="e.g., 35" required min="0"
-            class="w-full rounded-xl border border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-300 px-5 py-3 text-blue-900 placeholder-blue-400 transition-shadow duration-300" />
-        </div>
-
-        <button type="submit"
-          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-extrabold rounded-2xl py-4 shadow-lg transition-transform duration-300 hover:scale-105 flex justify-center items-center gap-3 select-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2" aria-hidden="true" focusable="false">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m0 0L8 12m4 8l4-8" />
-          </svg>
-          {{ _('Predict') }}
-        </button>
-      </form>
-
-      {% if prediction_text %}
-      <div id="predictionResult"
-        class="mt-10 mx-auto max-w-xl bg-blue-100 bg-opacity-70 border border-blue-400 rounded-3xl p-8 text-blue-900 font-semibold text-center text-xl shadow-lg backdrop-blur-sm"
-        role="alert">
-        {{ prediction_text }}
+  <!-- Hidden Printable Report -->
+  <div id="printableReport" class="hidden print:block absolute left-0 top-0 w-full bg-white p-8">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-3xl font-bold text-indigo-900 text-center mb-6">DIABETES PREDICTION REPORT</h1>
+      <p class="text-gray-600 text-center mb-8" id="reportDate"></p>
+      
+      <div class="bg-indigo-50 border-2 border-indigo-400 rounded-xl p-6 mb-6">
+        <h2 class="text-xl font-bold text-indigo-800 mb-2">RESULT</h2>
+        <p class="text-2xl font-bold" id="reportResult">{% if prediction_text %}{{ prediction_text }}{% endif %}</p>
       </div>
       
-      <!-- Print and Download Buttons -->
-      <div class="mt-4 flex justify-center gap-4 no-print">
-        <button onclick="printReport()" 
-          class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-          </svg>
-          {{ _('Print Report') }}
-        </button>
-        <button onclick="downloadPDF()" 
-          class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          {{ _('Download PDF') }}
-        </button>
+      <div class="bg-gray-50 border border-gray-300 rounded-xl p-6 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">INPUT VALUES</h2>
+        <ul class="space-y-2 text-gray-700" id="reportInputValues"></ul>
       </div>
-
-      <!-- Hidden Printable Report -->
-      <div id="printableReport" class="hidden print:block absolute left-0 top-0 w-full bg-white p-8">
-        <div class="max-w-2xl mx-auto">
-          <h1 class="text-3xl font-bold text-blue-900 text-center mb-6">DIABETES PREDICTION REPORT</h1>
-          <p class="text-gray-600 text-center mb-8" id="reportDate"></p>
-          
-          <div class="bg-blue-50 border-2 border-blue-400 rounded-xl p-6 mb-6">
-            <h2 class="text-xl font-bold text-blue-800 mb-2">RESULT</h2>
-            <p class="text-2xl font-bold" id="reportResult">{{ prediction_text }}</p>
-          </div>
-          
-          <div class="bg-gray-50 border border-gray-300 rounded-xl p-6 mb-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">INPUT VALUES</h2>
-            <ul class="space-y-2 text-gray-700" id="reportInputValues"></ul>
-          </div>
-          
-          <div class="bg-yellow-50 border border-yellow-400 rounded-xl p-4 mt-6">
-            <p class="text-sm text-yellow-800">
-              <strong>DISCLAIMER:</strong> This prediction is for informational purposes only and should not be considered medical advice. Please consult a healthcare professional for proper diagnosis.
-            </p>
-          </div>
-        </div>
+      
+      <div class="bg-yellow-50 border border-yellow-400 rounded-xl p-4 mt-6">
+        <p class="text-sm text-yellow-800">
+          <strong>DISCLAIMER:</strong> This prediction is for informational purposes only and should not be considered medical advice. Please consult a healthcare professional for proper diagnosis.
+        </p>
       </div>
-      {% endif %}
-
-        <a href="/explore"
-        class="mt-8 block mx-auto max-w-xl text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl py-4 shadow-md transition-transform duration-300 hover:scale-105 select-none">
-        📊 {{ _('Explore Dataset') }}
-      </a>
-
-      <a href="/life"
-        class="mt-8 block mx-auto max-w-xl text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl py-4 shadow-md transition-transform duration-300 hover:scale-105 select-none">
-        📊 {{ _('CHECK YOUR LIFESTYLE') }}
-      </a>
-    </section>
-  </main>
+    </div>
+  </div>
 
   <!-- Chatbot Floating Button -->
   <a href="/chatbot" aria-label="Chatbot" title="Chatbot"
-    class="fixed bottom-8 right-8 bg-blue-700 hover:bg-blue-800 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 z-50 select-none">
-    <!-- Robot icon SVG -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2" aria-hidden="true" focusable="false">
-      <rect x="7" y="7" width="10" height="10" rx="2" ry="2" />
-      <path stroke-linecap="round" stroke-linejoin="round" d="M7 17h10M9 10h.01M15 10h.01" />
+    class="fixed bottom-8 right-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl z-50">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
     </svg>
   </a>
 
   <script>
-    document.getElementById('lang-btn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      document.getElementById('lang-dropdown').classList.toggle('show');
-    });
-    document.addEventListener('click', function() {
-      document.getElementById('lang-dropdown').classList.remove('show');
-    });
-    function setLanguage(langCode) {
-      fetch('/api/set-language', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language: langCode })
-      })
-      .then(response => response.json())
-      .then(data => { if (data.success) window.location.reload(); })
-      .catch(err => console.error('Language switch failed:', err));
-    }
-
-    // Print and PDF Download Functions
+    // Print and PDF Functions
     function getInputValues() {
       return {
         'Pregnancies': document.getElementById('Pregnancies')?.value || 'N/A',
@@ -219,42 +437,42 @@
     }
 
     function prepareReport() {
-      const reportDate = document.getElementById('reportDate');
-      const reportInputValues = document.getElementById('reportInputValues');
+      var reportDate = document.getElementById('reportDate');
+      var reportInputValues = document.getElementById('reportInputValues');
       
       if (reportDate) reportDate.textContent = 'Date: ' + formatDate();
       
       if (reportInputValues) {
-        const values = getInputValues();
+        var values = getInputValues();
         reportInputValues.innerHTML = Object.entries(values)
-          .map(([key, val]) => '<li><strong>' + key + ':</strong> ' + val + '</li>')
+          .map(function(entry) { return '<li><strong>' + entry[0] + ':</strong> ' + entry[1] + '</li>'; })
           .join('');
       }
     }
 
     function printReport() {
       prepareReport();
-      const printableReport = document.getElementById('printableReport');
+      var printableReport = document.getElementById('printableReport');
       if (printableReport) {
         printableReport.classList.remove('hidden');
         window.print();
-        setTimeout(() => printableReport.classList.add('hidden'), 100);
+        setTimeout(function() { printableReport.classList.add('hidden'); }, 100);
       }
     }
 
     function downloadPDF() {
       prepareReport();
-      const printableReport = document.getElementById('printableReport');
+      var printableReport = document.getElementById('printableReport');
       if (printableReport && typeof html2pdf !== 'undefined') {
         printableReport.classList.remove('hidden');
-        const opt = {
+        var opt = {
           margin: 10,
           filename: 'diabetes-prediction-report-' + Date.now() + '.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        html2pdf().set(opt).from(printableReport).save().then(() => {
+        html2pdf().set(opt).from(printableReport).save().then(function() {
           printableReport.classList.add('hidden');
         });
       } else {
@@ -263,5 +481,5 @@
     }
   </script>
 </body>
-
 </html>
+""
