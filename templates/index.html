@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 
 <head>
@@ -18,14 +18,14 @@
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #6366f1;
+      color: #3b82f6;
     }
     .form-input {
       transition: all 0.3s ease;
     }
     .form-input:focus {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
     }
     .fade-in {
       animation: fadeIn 0.6s ease-out forwards;
@@ -80,7 +80,7 @@
     }
     .btn-primary:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
     }
     .info-card {
       transition: all 0.3s ease;
@@ -100,20 +100,20 @@
   </style>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 flex flex-col font-sans">
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col font-sans">
   {% include 'navbar.html' %}
 
   <!-- Hero Section -->
   <section class="relative py-12 px-6 text-center text-white overflow-hidden">
-    <div class="absolute inset-0 opacity-20">
-      <div class="absolute top-10 left-20 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-10 right-20 w-80 h-80 bg-purple-500 rounded-full blur-3xl"></div>
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-20 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-20 w-80 h-80 bg-purple-300 rounded-full blur-3xl"></div>
     </div>
     <div class="relative max-w-3xl mx-auto fade-in">
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
         {{ _('Diabetes Prediction') }}
       </h1>
-      <p class="text-lg text-indigo-200 max-w-xl mx-auto">
+      <p class="text-lg text-blue-100 max-w-xl mx-auto">
         {{ _('Get an AI-powered prediction based on your health metrics. Enter your details below for instant results.') }}
       </p>
     </div>
@@ -140,7 +140,7 @@
                     </svg>
                   </span>
                   <input type="number" id="Pregnancies" name="Pregnancies" placeholder="e.g., 2" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Number of times pregnant') }}</span>
               </div>
@@ -157,7 +157,7 @@
                     </svg>
                   </span>
                   <input type="number" id="Glucose" name="Glucose" placeholder="e.g., 130" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Plasma glucose concentration (2 hours after glucose tolerance test)') }}</span>
               </div>
@@ -174,7 +174,7 @@
                     </svg>
                   </span>
                   <input type="number" id="BloodPressure" name="BloodPressure" placeholder="e.g., 70" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Diastolic blood pressure measurement') }}</span>
               </div>
@@ -191,7 +191,7 @@
                     </svg>
                   </span>
                   <input type="number" id="SkinThickness" name="SkinThickness" placeholder="e.g., 32" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Triceps skin fold thickness') }}</span>
               </div>
@@ -208,7 +208,7 @@
                     </svg>
                   </span>
                   <input type="number" id="Insulin" name="Insulin" placeholder="e.g., 85" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('2-Hour serum insulin level') }}</span>
               </div>
@@ -216,7 +216,7 @@
               <!-- BMI -->
               <div class="relative tooltip">
                 <label for="BMI" class="block text-gray-700 font-semibold mb-2 text-sm">
-                  {{ _('BMI') }} (kg/m²)
+                  {{ _('BMI') }} (kg/mÂ²)
                 </label>
                 <div class="relative">
                   <span class="input-icon">
@@ -225,9 +225,9 @@
                     </svg>
                   </span>
                   <input type="number" step="0.1" id="BMI" name="BMI" placeholder="e.g., 28.5" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
-                <span class="tooltip-text">{{ _('Body Mass Index (weight in kg / height in m²)') }}</span>
+                <span class="tooltip-text">{{ _('Body Mass Index (weight in kg / height in mÂ²)') }}</span>
               </div>
 
               <!-- Diabetes Pedigree Function -->
@@ -243,7 +243,7 @@
                   </span>
                   <input type="number" step="0.01" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction"
                     placeholder="e.g., 0.45" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Genetic influence score based on family history (0.0 - 2.5)') }}</span>
               </div>
@@ -260,7 +260,7 @@
                     </svg>
                   </span>
                   <input type="number" id="Age" name="Age" placeholder="e.g., 35" required min="0"
-                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
                 </div>
                 <span class="tooltip-text">{{ _('Your current age in years') }}</span>
               </div>
@@ -268,7 +268,7 @@
 
             <!-- Submit Button -->
             <button type="submit" id="submitBtn"
-              class="btn-primary w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl py-4 mt-6 flex justify-center items-center gap-3">
+              class="btn-primary w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl py-4 mt-6 flex justify-center items-center gap-3">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
               </svg>
@@ -325,8 +325,8 @@
       <div class="space-y-6 fade-in" style="animation-delay: 0.2s;">
         <!-- Info Cards -->
         <div class="glass-card info-card rounded-2xl p-6">
-          <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
@@ -358,13 +358,13 @@
         <div class="glass-card rounded-2xl p-6">
           <h3 class="text-lg font-bold text-gray-800 mb-4">{{ _('Quick Links') }}</h3>
           <div class="space-y-3">
-            <a href="/life" class="flex items-center gap-3 p-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition text-indigo-700 font-medium">
+            <a href="/life" class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition text-blue-700 font-medium">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
               </svg>
               {{ _('Lifestyle Check') }}
             </a>
-            <a href="/explore" class="flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:bg-purple-100 transition text-purple-700 font-medium">
+            <a href="/explore" class="flex items-center gap-3 p-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition text-indigo-700 font-medium">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
@@ -385,11 +385,11 @@
   <!-- Hidden Printable Report -->
   <div id="printableReport" class="hidden print:block absolute left-0 top-0 w-full bg-white p-8">
     <div class="max-w-2xl mx-auto">
-      <h1 class="text-3xl font-bold text-indigo-900 text-center mb-6">DIABETES PREDICTION REPORT</h1>
+      <h1 class="text-3xl font-bold text-blue-900 text-center mb-6">DIABETES PREDICTION REPORT</h1>
       <p class="text-gray-600 text-center mb-8" id="reportDate"></p>
       
-      <div class="bg-indigo-50 border-2 border-indigo-400 rounded-xl p-6 mb-6">
-        <h2 class="text-xl font-bold text-indigo-800 mb-2">RESULT</h2>
+      <div class="bg-blue-50 border-2 border-blue-400 rounded-xl p-6 mb-6">
+        <h2 class="text-xl font-bold text-blue-800 mb-2">RESULT</h2>
         <p class="text-2xl font-bold" id="reportResult">{% if prediction_text %}{{ prediction_text }}{% endif %}</p>
       </div>
       
@@ -408,7 +408,7 @@
 
   <!-- Chatbot Floating Button -->
   <a href="/chatbot" aria-label="Chatbot" title="Chatbot"
-    class="fixed bottom-8 right-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl z-50">
+    class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl z-50">
     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
     </svg>
