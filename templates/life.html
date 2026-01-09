@@ -1,161 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ _('Personalized Lifestyle Plan') }}</title>
+  <title>{{ _('Lifestyle Check') }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* --- Navbar Improvement Section --- */
-    .navbar {
-      background-color: #1d4ed8; 
-      color: white;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 0.75rem 0;
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
-
-    .navbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 1.5rem;
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #10b981;
     }
-
-    .navbar-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 1px 1px 0 rgba(0,0,0,0.15), 2px 2px 0 rgba(0,0,0,0.08); 
+    .form-input {
+      transition: all 0.3s ease;
     }
-
-    .navbar-links {
-      display: flex !important; 
-      list-style: none;
-      gap: 1.5rem;
-      margin: 0;
-      padding: 0;
+    .form-input:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
     }
-
-    .navbar-links li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: color 0.2s ease;
-    }
-
-    .navbar-links li a:hover {
-      color: #bfdbfe; 
-    }
-
-    body {
-      padding-top: 80px; 
-      background-image: radial-gradient(#dbeafe 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
-    #result.show {
-      animation: fadeIn 0.7s ease forwards;
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .result-card {
+      animation: slideUp 0.5s ease-out forwards;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .btn-primary {
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    }
+    .info-card {
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
     .category-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.3s ease;
     }
     .category-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
     .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3b82f6;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       animation: spin 1s linear infinite;
-      display: inline-block;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    .progress-ring {
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .score-gauge {
+      background: conic-gradient(from 180deg, #10b981 0%, #10b981 var(--score-percent), #e5e7eb var(--score-percent), #e5e7eb 100%);
+    }
+    .lang-dropdown { display: none; }
+    .lang-dropdown.show { display: block; }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen flex flex-col">
-
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col font-sans">
   {% include 'navbar.html' %}
 
-  <main class="flex-grow flex items-center justify-center p-6">
-    <div class="max-w-2xl w-full bg-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20">
-      <h2 class="text-3xl font-extrabold mb-6 text-center text-blue-800 tracking-wide">🌿 {{ _('Personalized Lifestyle Plan') }}
-      </h2>
+  <!-- Hero Section -->
+  <section class="relative py-12 px-6 text-center text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-20 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-20 w-80 h-80 bg-green-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-3xl mx-auto fade-in">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-4">
+        <span class="text-xl">🌿</span>
+        <span>{{ _('Personalized Health Assessment') }}</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+        {{ _('Lifestyle Check') }}
+      </h1>
+      <p class="text-lg text-blue-100 max-w-xl mx-auto">
+        {{ _('Get personalized lifestyle recommendations based on your health profile. Our AI analyzes your data to create a custom wellness plan.') }}
+      </p>
+    </div>
+  </section>
 
-      <form id="planForm" class="space-y-5">
-        <div>
-          <label for="age" class="block font-semibold mb-1 text-gray-700">{{ _('Age') }}</label>
-          <input type="number" id="age" name="age" min="1" max="120" placeholder="{{ _('Enter your age') }}"
-            inputmode="numeric" autocomplete="age"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
+  <main class="flex-grow px-6 pb-16 -mt-4">
+    <div class="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+      
+      <!-- Form Section -->
+      <div class="lg:col-span-2 fade-in">
+        <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-10">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">{{ _('Your Health Profile') }}</h2>
+              <p class="text-sm text-gray-500">{{ _('Fill in your details for personalized recommendations') }}</p>
+            </div>
+          </div>
+
+          <form id="planForm" class="space-y-6" novalidate>
+            <div class="grid md:grid-cols-2 gap-6">
+              
+              <!-- Age -->
+              <div class="relative">
+                <label for="age" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Age') }}
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="age" name="age" min="1" max="120" placeholder="{{ _('e.g., 35') }}"
+                    inputmode="numeric" autocomplete="age" required
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+              </div>
+
+              <!-- Weight -->
+              <div class="relative">
+                <label for="weight" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Weight') }} (kg)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="weight" name="weight" min="1" max="500" step="0.1" placeholder="{{ _('e.g., 70') }}"
+                    inputmode="decimal" autocomplete="weight" required
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+              </div>
+
+              <!-- Height -->
+              <div class="relative">
+                <label for="height" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('Height') }} (cm)
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="height" name="height" min="30" max="300" step="0.1" placeholder="{{ _('e.g., 175') }}"
+                    inputmode="decimal" autocomplete="height" required
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-0 text-gray-800 placeholder-gray-400" />
+                </div>
+              </div>
+
+              <!-- BMI (Auto-calculated) -->
+              <div class="relative">
+                <label for="bmi" class="block text-gray-700 font-semibold mb-2 text-sm">
+                  {{ _('BMI') }} <span class="text-xs text-gray-400">({{ _('auto-calculated') }})</span>
+                </label>
+                <div class="relative">
+                  <span class="input-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                  </span>
+                  <input type="number" step="0.1" id="bmi" name="bmi" min="10" max="50" placeholder="{{ _('Calculated from weight & height') }}"
+                    inputmode="decimal" readonly
+                    class="form-input w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-400 cursor-not-allowed" />
+                </div>
+                <p id="bmi-status" class="text-xs mt-1 text-gray-500"></p>
+              </div>
+            </div>
+
+            <!-- Activity Level -->
+            <div class="relative">
+              <label for="activity" class="block text-gray-700 font-semibold mb-2 text-sm">
+                {{ _('Physical Activity Level') }}
+              </label>
+              <div class="grid grid-cols-3 gap-3">
+                <label class="activity-option cursor-pointer">
+                  <input type="radio" name="activity" value="low" class="sr-only peer" required />
+                  <div class="p-4 rounded-xl border-2 border-gray-200 text-center transition-all peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300">
+                    <span class="text-2xl block mb-2">🚶</span>
+                    <span class="text-sm font-medium text-gray-700">{{ _('Low') }}</span>
+                    <span class="text-xs text-gray-500 block">{{ _('Sedentary') }}</span>
+                  </div>
+                </label>
+                <label class="activity-option cursor-pointer">
+                  <input type="radio" name="activity" value="moderate" class="sr-only peer" />
+                  <div class="p-4 rounded-xl border-2 border-gray-200 text-center transition-all peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300">
+                    <span class="text-2xl block mb-2">🏃</span>
+                    <span class="text-sm font-medium text-gray-700">{{ _('Moderate') }}</span>
+                    <span class="text-xs text-gray-500 block">{{ _('3-5 days/week') }}</span>
+                  </div>
+                </label>
+                <label class="activity-option cursor-pointer">
+                  <input type="radio" name="activity" value="high" class="sr-only peer" />
+                  <div class="p-4 rounded-xl border-2 border-gray-200 text-center transition-all peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300">
+                    <span class="text-2xl block mb-2">💪</span>
+                    <span class="text-sm font-medium text-gray-700">{{ _('High') }}</span>
+                    <span class="text-xs text-gray-500 block">{{ _('Daily exercise') }}</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn"
+              class="btn-primary w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl py-4 mt-4 flex justify-center items-center gap-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              </svg>
+              <span id="btnText">{{ _('Generate My Plan') }}</span>
+              <span id="btnSpinner" class="loading-spinner hidden"></span>
+            </button>
+          </form>
+
+          <!-- Result Section -->
+          <div id="result" class="mt-8 hidden" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- Info Sidebar -->
+      <div class="space-y-6 fade-in" style="animation-delay: 0.2s;">
+        <!-- What We Analyze -->
+        <div class="glass-card info-card rounded-2xl p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-2">{{ _('What We Analyze') }}</h3>
+          <p class="text-gray-600 text-sm">{{ _('Our AI considers your age, BMI, and activity level to create personalized recommendations across 5 key areas.') }}</p>
         </div>
 
-        <div>
-          <label for="weight" class="block font-semibold mb-1 text-gray-700">{{ _('Weight (kg)') }}</label>
-          <input type="number" id="weight" name="weight" min="1" max="500" step="0.1" placeholder="{{ _('Enter your weight in kg') }}"
-            inputmode="decimal" autocomplete="weight"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
+        <!-- Categories -->
+        <div class="glass-card info-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">{{ _('Plan Categories') }}</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-orange-50">
+              <span class="text-xl">🍽️</span>
+              <span class="text-sm font-medium text-gray-700">{{ _('Diet & Nutrition') }}</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-blue-50">
+              <span class="text-xl">🏃</span>
+              <span class="text-sm font-medium text-gray-700">{{ _('Exercise & Activity') }}</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-purple-50">
+              <span class="text-xl">🧘</span>
+              <span class="text-sm font-medium text-gray-700">{{ _('Stress Management') }}</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-indigo-50">
+              <span class="text-xl">😴</span>
+              <span class="text-sm font-medium text-gray-700">{{ _('Sleep & Recovery') }}</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-green-50">
+              <span class="text-xl">📊</span>
+              <span class="text-sm font-medium text-gray-700">{{ _('Health Monitoring') }}</span>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label for="height" class="block font-semibold mb-1 text-gray-700">{{ _('Height (cm)') }}</label>
-          <input type="number" id="height" name="height" min="30" max="300" step="0.1" placeholder="{{ _('Enter your height in cm') }}"
-            inputmode="decimal" autocomplete="height"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
+        <!-- Quick Links -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">{{ _('Quick Links') }}</h3>
+          <div class="space-y-3">
+            <a href="/index" class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition text-blue-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              {{ _('Diabetes Prediction') }}
+            </a>
+            <a href="/explore" class="flex items-center gap-3 p-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition text-indigo-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+              </svg>
+              {{ _('Explore Data') }}
+            </a>
+            <a href="/chatbot" class="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition text-emerald-700 font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              {{ _('AI Chatbot') }}
+            </a>
+          </div>
         </div>
-
-        <div>
-          <label for="bmi" class="block font-semibold mb-1 text-gray-700">{{ _('BMI (Body Mass Index)') }}</label>
-          <input type="number" step="0.1" id="bmi" name="bmi" min="10" max="50" placeholder="{{ _('Enter your BMI') }}"
-            inputmode="decimal" aria-describedby="bmi-hint"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
-          <p id="bmi-hint" class="text-xs text-gray-500 mt-1">{{ _('Not sure? BMI = weight(kg) / height(m)²') }}</p>
-        </div>
-
-        <div>
-          <label for="activity" class="block font-semibold mb-1 text-gray-700">{{ _('Physical Activity Level') }}</label>
-          <select id="activity" name="activity"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required>
-            <option value="" disabled selected>{{ _('Select activity level') }}</option>
-            <option value="low">{{ _('Low (Sedentary)') }}</option>
-            <option value="moderate">{{ _('Moderate (3-5 days/week)') }}</option>
-            <option value="high">{{ _('High (Daily or intense exercise)') }}</option>
-          </select>
-        </div>
-
-        <button type="submit" id="submitBtn"
-          class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2.5 rounded-xl shadow-lg hover:scale-105 transition-transform duration-200 flex items-center justify-center gap-2">
-          <span id="btnText">🔍 {{ _('Generate Plan') }}</span>
-          <span id="btnSpinner" class="loading-spinner hidden"></span>
-        </button>
-      </form>
-
-      <div id="result" class="mt-8 hidden" role="status" aria-live="polite"></div>
+      </div>
     </div>
   </main>
+
+  <!-- Chatbot Floating Button -->
+  <a href="/chatbot" aria-label="Chatbot" title="Chatbot"
+    class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl z-50">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    </svg>
+  </a>
+
 
   <script>
     const form = document.getElementById('planForm');
@@ -167,6 +334,7 @@
     const weightInput = document.getElementById('weight');
     const heightInput = document.getElementById('height');
     const bmiInput = document.getElementById('bmi');
+    const bmiStatus = document.getElementById('bmi-status');
 
     function calculateBMI() {
       const weight = parseFloat(weightInput.value);
@@ -176,16 +344,23 @@
         const heightM = heightCm / 100;
         const bmi = weight / (heightM * heightM);
         bmiInput.value = bmi.toFixed(1);
+        
+        // Update BMI status
+        let status = '', color = '';
+        if (bmi < 18.5) { status = '{{ _("Underweight") }}'; color = 'text-blue-600'; }
+        else if (bmi < 25) { status = '{{ _("Normal") }}'; color = 'text-green-600'; }
+        else if (bmi < 30) { status = '{{ _("Overweight") }}'; color = 'text-yellow-600'; }
+        else { status = '{{ _("Obese") }}'; color = 'text-red-600'; }
+        
+        bmiStatus.innerHTML = `<span class="${color} font-medium">${status}</span>`;
       } else {
         bmiInput.value = '';
+        bmiStatus.innerHTML = '';
       }
     }
 
     weightInput.addEventListener('input', calculateBMI);
     heightInput.addEventListener('input', calculateBMI);
-
-    const GENERATE_TEXT = btnText.textContent;
-    const GENERATING_TEXT = `⏳ {{ _('Generating...') }}`;
 
     const categoryIcons = {
       diet: '🍽️',
@@ -195,12 +370,23 @@
       monitoring: '📊'
     };
     const categoryTitles = {
-      diet: 'Diet & Nutrition', exercise: 'Exercise & Activity', stress: 'Stress Management', sleep: 'Sleep & Recovery', monitoring: 'Health Monitoring'
+      diet: "{{ _('Diet & Nutrition') }}",
+      exercise: "{{ _('Exercise & Activity') }}",
+      stress: "{{ _('Stress Management') }}",
+      sleep: "{{ _('Sleep & Recovery') }}",
+      monitoring: "{{ _('Health Monitoring') }}"
+    };
+    const categoryColors = {
+      diet: 'bg-orange-50 border-orange-200',
+      exercise: 'bg-blue-50 border-blue-200',
+      stress: 'bg-purple-50 border-purple-200',
+      sleep: 'bg-indigo-50 border-indigo-200',
+      monitoring: 'bg-green-50 border-green-200'
     };
 
     function setLoading(loading) {
       submitBtn.disabled = loading;
-      btnText.textContent = loading ? GENERATING_TEXT : GENERATE_TEXT;
+      btnText.textContent = loading ? "{{ _('Generating...') }}" : "{{ _('Generate My Plan') }}";
       btnSpinner.classList.toggle('hidden', !loading);
       submitBtn.classList.toggle('opacity-75', loading);
     }
@@ -218,42 +404,80 @@
         </div>
       `;
       resultDiv.classList.remove('hidden');
-      resultDiv.classList.add('show');
     }
 
     function renderPlan(data) {
       if (!data || data.success !== true || !data.plan || typeof data.plan !== 'object' || !data.profile) {
-        showResultMessage(`{{ _('No lifestyle plan data was returned. Please try again.') }}`, 'error');
+        showResultMessage("{{ _('No lifestyle plan data was returned. Please try again.') }}", 'error');
         return;
       }
 
       const { plan, profile, source } = data;
+      
+      // Profile Card
       let profileHtml = `
-        <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
-          <h3 class="text-lg font-semibold text-blue-800 mb-2">{{ _('Your Profile') }}</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-            <div><span class="text-gray-600">{{ _('Age') }}:</span> <strong>${profile.age}</strong> (${profile.age_group})</div>
-            <div><span class="text-gray-600">{{ _('BMI') }}:</span> <strong>${profile.bmi}</strong> (${profile.bmi_category})</div>
-            <div><span class="text-gray-600">{{ _('Activity') }}:</span> <strong class="capitalize">${profile.activity}</strong></div>
+        <div class="result-card mb-6 p-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl text-white">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold">{{ _('Your Profile') }}</h3>
+              <p class="text-green-100 text-sm">{{ _('Based on your inputs') }}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+              <p class="text-2xl font-bold">${profile.age}</p>
+              <p class="text-xs text-green-100">${profile.age_group}</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+              <p class="text-2xl font-bold">${profile.bmi}</p>
+              <p class="text-xs text-green-100">${profile.bmi_category}</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+              <p class="text-2xl font-bold capitalize">${profile.activity}</p>
+              <p class="text-xs text-green-100">{{ _('Activity') }}</p>
+            </div>
           </div>
         </div>
       `;
 
-      let planHtml = '<h3 class="text-2xl font-semibold mb-4 text-blue-700">{{ _("Your Custom Lifestyle Plan") }}</h3>';
-      planHtml += '<div class="grid gap-4">';
+      // Plan Cards
+      let planHtml = `
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">{{ _('Your Custom Lifestyle Plan') }}</h3>
+        </div>
+        <div class="grid gap-4">
+      `;
 
       let renderedAny = false;
       for (const [category, tips] of Object.entries(plan)) {
         if (tips && tips.length > 0) {
           renderedAny = true;
+          const colorClass = categoryColors[category] || 'bg-gray-50 border-gray-200';
           planHtml += `
-            <div class="category-card p-4 bg-white/80 rounded-xl border border-gray-200 shadow-sm">
-              <div class="flex items-center gap-2 mb-3">
+            <div class="category-card p-5 ${colorClass} rounded-xl border">
+              <div class="flex items-center gap-3 mb-3">
                 <span class="text-2xl">${categoryIcons[category] || '📌'}</span>
-                <h4 class="font-semibold text-gray-800">${categoryTitles[category] || category}</h4>
+                <h4 class="font-bold text-gray-800">${categoryTitles[category] || category}</h4>
               </div>
               <ul class="space-y-2">
-                ${tips.map(tip => `<li class="flex items-start gap-2 text-gray-700"><span class="text-green-500 mt-1">*</span><span>${tip}</span></li>`).join('')}
+                ${tips.map(tip => `
+                  <li class="flex items-start gap-3 text-gray-700">
+                    <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>${tip}</span>
+                  </li>
+                `).join('')}
               </ul>
             </div>
           `;
@@ -262,34 +486,50 @@
       planHtml += '</div>';
 
       if (!renderedAny) {
-        showResultMessage(`{{ _('A plan was generated but it contained no recommendations. Please try again.') }}`, 'error');
+        showResultMessage("{{ _('A plan was generated but it contained no recommendations. Please try again.') }}", 'error');
         return;
       }
 
-      if (source === 'ai') planHtml += '<p class="text-xs text-gray-500 mt-4 text-center">✨ Personalized with AI</p>';
+      if (source === 'ai') {
+        planHtml += `
+          <div class="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
+            <span>✨</span>
+            <span>{{ _('Personalized with AI') }}</span>
+          </div>
+        `;
+      }
 
       resultDiv.innerHTML = profileHtml + planHtml;
       resultDiv.classList.remove('hidden');
-      resultDiv.classList.add('show');
+      
+      // Scroll to results
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Reset output area for a clean run
       resultDiv.classList.add('hidden');
-      resultDiv.classList.remove('show');
       resultDiv.innerHTML = '';
       
-      // Secondary check: Ensure BMI was actually calculated
       if (!bmiInput.value) {
-        alert("{{ _('Please enter valid weight and height (or fill BMI) to continue.') }}");
+        alert("{{ _('Please enter valid weight and height to continue.') }}");
+        return;
+      }
+
+      const activitySelected = form.querySelector('input[name="activity"]:checked');
+      if (!activitySelected) {
+        alert("{{ _('Please select your activity level.') }}");
         return;
       }
 
       setLoading(true);
 
-      const formData = { age: form.age.value, bmi: form.bmi.value, activity: form.activity.value };
+      const formData = { 
+        age: form.age.value, 
+        bmi: bmiInput.value, 
+        activity: activitySelected.value 
+      };
 
       try {
         const response = await fetch('/api/lifestyle-plan', {
@@ -304,13 +544,13 @@
         renderPlan(data);
       } catch (error) {
         console.error('Error:', error);
-        showResultMessage(`<strong>Error:</strong> ${error.message}`, 'error');
+        showResultMessage(`<strong>{{ _('Error') }}:</strong> ${error.message}`, 'error');
       } finally {
         setLoading(false);
       }
     });
 
-    // Language selector (guarded: navbar may vary per page)
+    // Language selector
     const langBtn = document.getElementById('lang-btn');
     const langDropdown = document.getElementById('lang-dropdown');
     if (langBtn && langDropdown) {
@@ -334,5 +574,4 @@
     }
   </script>
 </body>
-
 </html>
