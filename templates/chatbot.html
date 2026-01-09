@@ -1,310 +1,442 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ _('Diabetes Chatbot') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background: linear-gradient(135deg, #4a90e2, #50e3c2);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .navbar {
-            background-color: #1d4ed8;
-            color: #ffffff;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .navbar-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-        }
-
-        .navbar-links {
-            list-style: none;
-            display: flex;
-            gap: 1.5rem;
-            margin: 0;
-            padding: 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-
-        .navbar-links a {
-            color: #e5e7eb;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .navbar-links a:hover {
-            color: #bfdbfe;
-        }
-
-        .chat-container {
-            background-color: #ffffffcc;
-            border-radius: 15px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-            overflow: hidden;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .chat-header {
-            background: #007bff;
-            color: #fff;
-            padding: 18px 20px;
-            font-size: 1.4rem;
-            font-weight: 600;
-            text-align: center;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-            letter-spacing: 0.05em;
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #f9f9f9;
-            scrollbar-width: thin;
-            scrollbar-color: #007bff #e1e1e1;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background-color: #007bff;
-            border-radius: 20px;
-        }
-
-        .message {
-            margin-bottom: 14px;
-            display: flex;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        .message.user {
-            justify-content: flex-end;
-        }
-
-        .message.bot {
-            justify-content: flex-start;
-        }
-
-        .message-bubble {
-            max-width: 70%;
-            padding: 14px 20px;
-            border-radius: 25px;
-            line-height: 1.5;
-            word-wrap: break-word;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, #4caf50, #81c784);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.bot .message-bubble {
-            background: #e0e0e0;
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-
-        .chat-input {
-            display: flex;
-            padding: 15px 20px;
-            border-top: 1px solid #ddd;
-            background-color: #fff;
-        }
-
-        .chat-input input[type="text"] {
-            flex-grow: 1;
-            padding: 14px 18px;
-            border: 2px solid #007bff;
-            border-radius: 25px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .chat-input input[type="text"]:focus {
-            border-color: #0056b3;
-            box-shadow: 0 0 8px #0056b3aa;
-        }
-
-        .chat-input button {
-            margin-left: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 14px 24px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
-        }
-
-        .chat-input button:hover {
-            background-color: #0056b3;
-            box-shadow: 0 6px 16px rgba(0, 86, 179, 0.7);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ _('AI Chatbot') }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .message-slide {
+      animation: messageSlide 0.3s ease-out forwards;
+    }
+    @keyframes messageSlide {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .user-message-slide {
+      animation: userMessageSlide 0.3s ease-out forwards;
+    }
+    @keyframes userMessageSlide {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .typing-indicator span {
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .quick-reply {
+      transition: all 0.2s ease;
+    }
+    .quick-reply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+    .send-btn {
+      transition: all 0.2s ease;
+    }
+    .send-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+    .send-btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+    .info-card {
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .lang-dropdown { display: none; }
+    .lang-dropdown.show { display: block; }
+  </style>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col font-sans">
+  {% include 'navbar.html' %}
 
-    {% include 'navbar.html' %}
+  <!-- Hero Section -->
+  <section class="relative py-8 px-6 text-center text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-20 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-20 w-80 h-80 bg-purple-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-3xl mx-auto fade-in">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-3">
+        <span class="text-xl">🤖</span>
+        <span>{{ _('AI-Powered Assistant') }}</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-2">
+        {{ _('Diabetes Expert Chatbot') }}
+      </h1>
+      <p class="text-blue-100 max-w-xl mx-auto">
+        {{ _('Ask me anything about diabetes management, symptoms, diet, and lifestyle.') }}
+      </p>
+    </div>
+  </section>
 
-    <main class="flex-grow flex justify-center items-center p-5">
-        <div class="chat-container">
-            <div class="chat-header">
-                {{ _('Diabetes Expert Chatbot') }}
+  <main class="flex-grow px-4 pb-8 -mt-2">
+    <div class="max-w-6xl mx-auto grid lg:grid-cols-4 gap-6">
+      
+      <!-- Chat Container -->
+      <div class="lg:col-span-3 fade-in">
+        <div class="glass-card rounded-3xl shadow-2xl overflow-hidden flex flex-col" style="height: calc(100vh - 220px); min-height: 500px;">
+          
+          <!-- Chat Header -->
+          <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center gap-4">
+            <div class="relative">
+              <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </div>
+              <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
             </div>
-            <div class="chat-messages" id="chat-messages">
-                <div class="message bot">
-                    <div class="message-bubble">Hello! I'm here to help you understand diabetes and answer your
-                        questions. How can I assist you today?</div>
+            <div class="flex-1">
+              <h2 class="text-white font-bold text-lg">{{ _('DiabetesBot') }}</h2>
+              <p class="text-purple-200 text-sm">{{ _('Online • Ready to help') }}</p>
+            </div>
+            <button onclick="clearChat()" class="p-2 hover:bg-white/10 rounded-lg transition" title="{{ _('Clear chat') }}">
+              <svg class="w-5 h-5 text-white/70 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Chat Messages -->
+          <div class="chat-messages flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50" id="chat-messages">
+            <!-- Welcome Message -->
+            <div class="flex items-start gap-3 message-slide">
+              <div class="w-9 h-9 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm max-w-lg">
+                  <p class="text-gray-700">{{ _("Hello! 👋 I'm your diabetes expert assistant. I can help you with:") }}</p>
+                  <ul class="mt-2 space-y-1 text-gray-600 text-sm">
+                    <li>• {{ _('Understanding diabetes symptoms') }}</li>
+                    <li>• {{ _('Diet and nutrition advice') }}</li>
+                    <li>• {{ _('Exercise recommendations') }}</li>
+                    <li>• {{ _('Medication information') }}</li>
+                  </ul>
+                  <p class="mt-2 text-gray-700">{{ _('How can I assist you today?') }}</p>
                 </div>
+                <span class="text-xs text-gray-400 mt-1 ml-2 block">{{ _('Just now') }}</span>
+              </div>
             </div>
-            <div class="chat-input">
-                <input type="text" id="user-input" placeholder="{{ _('Type your message...') }}">
-                <button onclick="sendMessage()">{{ _('Send') }}</button>
+          </div>
+
+          <!-- Quick Replies -->
+          <div class="px-4 py-3 bg-white border-t border-gray-100" id="quick-replies">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="sendQuickReply('What are the symptoms of diabetes?')" class="quick-reply px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium hover:bg-purple-100 border border-purple-200">
+                {{ _('Symptoms') }}
+              </button>
+              <button onclick="sendQuickReply('What foods should I avoid with diabetes?')" class="quick-reply px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium hover:bg-purple-100 border border-purple-200">
+                {{ _('Diet tips') }}
+              </button>
+              <button onclick="sendQuickReply('What exercises are good for diabetics?')" class="quick-reply px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium hover:bg-purple-100 border border-purple-200">
+                {{ _('Exercise') }}
+              </button>
+              <button onclick="sendQuickReply('How can I manage my blood sugar levels?')" class="quick-reply px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium hover:bg-purple-100 border border-purple-200">
+                {{ _('Blood sugar') }}
+              </button>
             </div>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="px-4 py-4 bg-white border-t border-gray-200">
+            <div class="flex items-center gap-3">
+              <input type="text" id="user-input" 
+                placeholder="{{ _('Type your message...') }}"
+                class="flex-1 px-4 py-3 bg-gray-100 rounded-xl border-2 border-transparent focus:border-purple-500 focus:bg-white focus:outline-none transition text-gray-800 placeholder-gray-400" />
+              <button onclick="sendMessage()" id="send-btn"
+                class="send-btn w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl flex items-center justify-center shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
 
-    <script>
-        const THINKING_TEXT = "{{ _('Thinking...') }}";
-        const ERROR_TEXT = "{{ _('Sorry, I could not get a response. Please try again.') }}";
-        const SENDING_TEXT = "{{ _('Sending message, please wait...') }}";
+      <!-- Sidebar -->
+      <div class="space-y-4 fade-in" style="animation-delay: 0.2s;">
+        <!-- About Card -->
+        <div class="glass-card info-card rounded-2xl p-5">
+          <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-800 mb-2">{{ _('About This Bot') }}</h3>
+          <p class="text-gray-600 text-sm">{{ _('Powered by AI to provide accurate diabetes information. Not a replacement for medical advice.') }}</p>
+        </div>
 
-        async function sendMessage() {
-            const userInput = document.getElementById('user-input');
-            const chatMessages = document.getElementById('chat-messages');
-            const message = userInput.value.trim();
+        <!-- Tips Card -->
+        <div class="glass-card info-card rounded-2xl p-5">
+          <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-800 mb-2">{{ _('Tips') }}</h3>
+          <ul class="text-gray-600 text-sm space-y-1">
+            <li>• {{ _('Be specific with questions') }}</li>
+            <li>• {{ _('Ask follow-up questions') }}</li>
+            <li>• {{ _('Use quick replies') }}</li>
+          </ul>
+        </div>
 
-            if (message === '') return;
+        <!-- Quick Links -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="font-bold text-gray-800 mb-3">{{ _('Quick Links') }}</h3>
+          <div class="space-y-2">
+            <a href="/index" class="flex items-center gap-2 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition text-blue-700 text-sm font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              {{ _('Prediction') }}
+            </a>
+            <a href="/life" class="flex items-center gap-2 p-2 rounded-lg bg-green-50 hover:bg-green-100 transition text-green-700 text-sm font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+              {{ _('Lifestyle') }}
+            </a>
+            <a href="/explore" class="flex items-center gap-2 p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition text-indigo-700 text-sm font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+              </svg>
+              {{ _('Explore') }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.classList.add('message', 'user');
-            userMessageDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
-            chatMessages.appendChild(userMessageDiv);
-            userInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            const thinkingMessageDiv = document.createElement('div');
-            thinkingMessageDiv.classList.add('message', 'bot');
-            thinkingMessageDiv.innerHTML = `<div class="message-bubble">${THINKING_TEXT}</div>`;
-            chatMessages.appendChild(thinkingMessageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+  <script>
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const quickReplies = document.getElementById('quick-replies');
 
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
-                });
+    const THINKING_TEXT = "{{ _('Thinking...') }}";
+    const ERROR_TEXT = "{{ _('Sorry, I could not get a response. Please try again.') }}";
 
-                chatMessages.removeChild(thinkingMessageDiv);
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    function formatTime() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
-                const data = await response.json();
-                const botMessageDiv = document.createElement('div');
-                botMessageDiv.classList.add('message', 'bot');
-                botMessageDiv.innerHTML = `<div class="message-bubble">${formatMarkdown(data.reply)}</div>`;
-                chatMessages.appendChild(botMessageDiv);
-            } catch (error) {
-                console.error('Error:', error);
-                chatMessages.removeChild(thinkingMessageDiv);
-                const errorMessageDiv = document.createElement('div');
-                errorMessageDiv.classList.add('message', 'bot');
-                errorMessageDiv.innerHTML = `<div class="message-bubble">${ERROR_TEXT}</div>`;
-                chatMessages.appendChild(errorMessageDiv);
-            } finally {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        }
+    function createBotMessage(content, isTyping = false) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex items-start gap-3 message-slide';
+      
+      if (isTyping) {
+        wrapper.innerHTML = `
+          <div class="w-9 h-9 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm inline-block">
+              <div class="typing-indicator flex gap-1">
+                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        wrapper.innerHTML = `
+          <div class="w-9 h-9 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm max-w-lg">
+              <div class="text-gray-700 prose prose-sm">${content}</div>
+            </div>
+            <span class="text-xs text-gray-400 mt-1 ml-2 block">${formatTime()}</span>
+          </div>
+        `;
+      }
+      
+      return wrapper;
+    }
 
-        // Send message on Enter key press
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+    function createUserMessage(content) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex items-start gap-3 justify-end user-message-slide';
+      wrapper.innerHTML = `
+        <div class="flex-1 flex flex-col items-end">
+          <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl rounded-tr-md px-4 py-3 shadow-sm max-w-lg">
+            <p>${escapeHtml(content)}</p>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 mr-2">${formatTime()}</span>
+        </div>
+        <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+      `;
+      return wrapper;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatMarkdown(text) {
+      if (!text) return '';
+      let html = escapeHtml(text);
+      // Headers
+      html = html.replace(/###\s*(.+?)(?=\n|$)/g, '<h4 class="font-bold text-gray-800 mt-2 mb-1">$1</h4>');
+      // Bold
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>');
+      // Line breaks
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (message === '') return;
+
+      // Hide quick replies after first message
+      quickReplies.classList.add('hidden');
+
+      // Add user message
+      chatMessages.appendChild(createUserMessage(message));
+      userInput.value = '';
+      scrollToBottom();
+
+      // Disable input while processing
+      userInput.disabled = true;
+      sendBtn.disabled = true;
+
+      // Add typing indicator
+      const typingIndicator = createBotMessage('', true);
+      chatMessages.appendChild(typingIndicator);
+      scrollToBottom();
+
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
         });
 
-        function formatMarkdown(text) {
-            if (!text) return '';
-            let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            html = html.replace(/###\s*(.+?)(?=\n|$)/g, '\n<h3>$1</h3>\n');
-            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            return html;
-        }
+        // Remove typing indicator
+        chatMessages.removeChild(typingIndicator);
 
-        // Language selector
-        document.getElementById('lang-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.getElementById('lang-dropdown').classList.toggle('show');
-        });
-        document.addEventListener('click', function() {
-            document.getElementById('lang-dropdown').classList.remove('show');
-        });
-        function setLanguage(langCode) {
-            fetch('/api/set-language', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ language: langCode })
-            })
-            .then(response => response.json())
-            .then(data => { if (data.success) window.location.reload(); })
-            .catch(err => console.error('Language switch failed:', err));
-        }
-    </script>
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+        chatMessages.appendChild(createBotMessage(formatMarkdown(data.reply)));
+      } catch (error) {
+        console.error('Error:', error);
+        chatMessages.removeChild(typingIndicator);
+        chatMessages.appendChild(createBotMessage(`<span class="text-red-600">${ERROR_TEXT}</span>`));
+      } finally {
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+        userInput.focus();
+        scrollToBottom();
+      }
+    }
+
+    function sendQuickReply(message) {
+      userInput.value = message;
+      sendMessage();
+    }
+
+    function clearChat() {
+      // Keep only the welcome message
+      const messages = chatMessages.querySelectorAll('.flex');
+      messages.forEach((msg, index) => {
+        if (index > 0) msg.remove();
+      });
+      quickReplies.classList.remove('hidden');
+    }
+
+    // Send message on Enter key press
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Language selector
+    const langBtn = document.getElementById('lang-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+    if (langBtn && langDropdown) {
+      langBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langDropdown.classList.toggle('show');
+      });
+      document.addEventListener('click', function() {
+        langDropdown.classList.remove('show');
+      });
+    }
+    function setLanguage(langCode) {
+      fetch('/api/set-language', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: langCode })
+      })
+      .then(response => response.json())
+      .then(data => { if (data.success) window.location.reload(); })
+      .catch(err => console.error('Language switch failed:', err));
+    }
+  </script>
 </body>
-
 </html>
