@@ -17,75 +17,49 @@
       }
     })();
   </script>
-  <style>
-    .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-    }
-    .dark .glass-card {
-      background: rgba(30, 41, 59, 0.95);
-    }
-
-    .navbar-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 1px 1px 0 rgba(0,0,0,0.15), 2px 2px 0 rgba(0,0,0,0.08); 
-    }
-
-    .navbar-links {
-      display: flex !important; 
-      list-style: none;
-      gap: 1.5rem;
-      margin: 0;
-      padding: 0;
-    }
-
-    .navbar-links li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: color 0.2s ease;
-    }
-
-    .navbar-links li a:hover {
-      color: #bfdbfe; 
-    }
-
+ <style>
+    /* 1. Prevent Overlap: Space for Fixed Navbar */
     body {
-      padding-top: 80px; 
-      background-image: radial-gradient(#dbeafe 1px, transparent 1px);
-      background-size: 20px 20px;
+        padding-top: 120px !important; 
+        overflow-x: hidden;
+        font-family: 'Inter', sans-serif;
     }
-    #result.show {
-      animation: fadeIn 0.7s ease forwards;
+
+    /* 2. Cyber-Terminal Input Style */
+    .input-terminal {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        color: inherit;
+        transition: all 0.3s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .input-terminal:focus {
+        border-color: #00d2ff;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+        outline: none;
     }
-    .category-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    /* 3. High-Contrast Generate Button */
+    .glow-btn {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .category-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+
+    /* 4. Fix Navbar Layering */
+    .nav-floating {
+        z-index: 9999 !important;
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
     }
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3b82f6;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+</style>
 </head>
 
 <body class="bg-gradient-to-br from-blue-100 to-purple-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen flex flex-col transition-colors duration-300">
@@ -93,66 +67,56 @@
   {% include 'navbar.html' %}
 
   <main class="flex-grow flex items-center justify-center p-6">
-    <div class="max-w-2xl w-full bg-white/30 dark:bg-slate-800/50 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 dark:border-slate-700">
-      <h2 class="text-3xl font-extrabold mb-6 text-center text-blue-800 dark:text-blue-400 tracking-wide">🌿 {{ _('Personalized Lifestyle Plan') }}
-      </h2>
+    <section class="premium-glass max-w-4xl w-full p-8 md:p-12 space-y-10 shadow-2xl">
+        <header class="text-center">
+            <h2 class="text-4xl font-black tracking-tighter text-slate-800 dark:text-white uppercase mb-2">
+                🌿 {{ _('Lifestyle Diagnostics') }}
+            </h2>
+            <p class="text-blue-600 dark:text-blue-400 font-bold tracking-widest text-[10px] uppercase opacity-70">
+                {{ _('Neural Health Protocol Generator') }}
+            </p>
+        </header>
 
-      <form id="planForm" class="space-y-5">
-        <div>
-          <label for="age" class="block font-semibold mb-1 text-gray-700 dark:text-gray-300">{{ _('Age') }}</label>
-          <input type="number" id="age" name="age" min="1" max="120" placeholder="{{ _('Enter your age') }}"
-            inputmode="numeric" autocomplete="age"
-            class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
-        </div>
+        <form id="planForm" class="grid md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-slate-700 dark:text-blue-400 uppercase tracking-widest ml-2">{{ _('Age') }}</label>
+                <input type="number" id="age" name="age" class="input-terminal w-full rounded-2xl px-6 py-4" required />
+            </div>
 
-        <div>
-          <label for="weight" class="block font-semibold mb-1 text-gray-700 dark:text-gray-300">{{ _('Weight (kg)') }}</label>
-          <input type="number" id="weight" name="weight" min="1" max="500" step="0.1" placeholder="{{ _('Enter your weight in kg') }}"
-            inputmode="decimal" autocomplete="weight"
-            class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
-        </div>
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-slate-700 dark:text-blue-400 uppercase tracking-widest ml-2">{{ _('Weight (kg)') }}</label>
+                <input type="number" id="weight" name="weight" step="0.1" class="input-terminal w-full rounded-2xl px-6 py-4" required />
+            </div>
 
-        <div>
-          <label for="height" class="block font-semibold mb-1 text-gray-700 dark:text-gray-300">{{ _('Height (cm)') }}</label>
-          <input type="number" id="height" name="height" min="30" max="300" step="0.1" placeholder="{{ _('Enter your height in cm') }}"
-            inputmode="decimal" autocomplete="height"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
-        </div>
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-slate-700 dark:text-blue-400 uppercase tracking-widest ml-2">{{ _('Height (cm)') }}</label>
+                <input type="number" id="height" name="height" step="0.1" class="input-terminal w-full rounded-2xl px-6 py-4" required />
+            </div>
 
-        <div>
-          <label for="bmi" class="block font-semibold mb-1 text-gray-700">{{ _('BMI (Body Mass Index)') }}</label>
-          <input type="number" step="0.1" id="bmi" name="bmi" min="10" max="50" placeholder="{{ _('Enter your BMI') }}"
-            inputmode="decimal" aria-describedby="bmi-hint"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required />
-          <p id="bmi-hint" class="text-xs text-gray-500 mt-1">{{ _('Not sure? BMI = weight(kg) / height(m)²') }}</p>
-        </div>
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-slate-700 dark:text-blue-400 uppercase tracking-widest ml-2">{{ _('BMI') }}</label>
+                <input type="number" id="bmi" name="bmi" step="0.1" class="input-terminal w-full rounded-2xl px-6 py-4" required />
+            </div>
 
-        <div>
-          <label for="activity" class="block font-semibold mb-1 text-gray-700">{{ _('Physical Activity Level') }}</label>
-          <select id="activity" name="activity"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-            required>
-            <option value="" disabled selected>{{ _('Select activity level') }}</option>
-            <option value="low">{{ _('Low (Sedentary)') }}</option>
-            <option value="moderate">{{ _('Moderate (3-5 days/week)') }}</option>
-            <option value="high">{{ _('High (Daily or intense exercise)') }}</option>
-          </select>
-        </div>
+            <div class="space-y-2 md:col-span-2">
+                <label class="block text-[10px] font-black text-slate-700 dark:text-blue-400 uppercase tracking-widest ml-2">{{ _('Activity Level') }}</label>
+                <select id="activity" name="activity" class="input-terminal w-full rounded-2xl px-6 py-4 appearance-none" required>
+                    <option value="" disabled selected>{{ _('Select activity level') }}</option>
+                    <option value="low">{{ _('Low (Sedentary)') }}</option>
+                    <option value="moderate">{{ _('Moderate (3-5 days/week)') }}</option>
+                    <option value="high">{{ _('High (Daily or intense exercise)') }}</option>
+                </select>
+            </div>
 
-        <button type="submit" id="submitBtn"
-          class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2.5 rounded-xl shadow-lg hover:scale-105 transition-transform duration-200 flex items-center justify-center gap-2">
-          <span id="btnText">🔍 {{ _('Generate Plan') }}</span>
-          <span id="btnSpinner" class="loading-spinner hidden"></span>
-        </button>
-      </form>
+            <button type="submit" id="submitBtn" class="glow-btn md:col-span-2 w-full text-white py-5 rounded-2xl shadow-2xl flex justify-center items-center gap-4 text-xl">
+                <span id="btnText">🔍 {{ _('Execute Neural Scan') }}</span>
+                <span id="btnSpinner" class="loading-spinner hidden"></span>
+            </button>
+        </form>
 
-      <div id="result" class="mt-8 hidden" role="status" aria-live="polite"></div>
-    </div>
-  </main>
+        <div id="result" class="mt-8 hidden fade-in" role="status" aria-live="polite"></div>
+    </section>
+</main>
 
   <script>
     const form = document.getElementById('planForm');
@@ -329,6 +293,26 @@
       .then(data => { if (data.success) window.location.reload(); })
       .catch(err => console.error('Language switch failed:', err));
     }
+    function toggleTheme() {
+    // 1. Toggle the dark class
+    const isDark = document.documentElement.classList.toggle('dark');
+    
+    // 2. Update the navbar icon
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        // Change moon to sun and vice-versa
+        if (isDark) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+            icon.style.color = '#facc15'; // Yellow for sun
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+            icon.style.color = '#3b82f6'; // Blue for moon
+        }
+    }
+    
+    // 3. Save to localStorage
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
   </script>
 </body>
 

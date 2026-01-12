@@ -16,6 +16,94 @@
   .theme-toggle:hover {
     transform: rotate(15deg);
   }
+  /* Redesigned Premium Styles */
+:root {
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --accent-glow: rgba(59, 130, 246, 0.5);
+}
+
+body {
+  background: #030712; /* Deep space-black */
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.1) 0, transparent 50%);
+  min-height: 100vh;
+  color: white !important;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Futuristic Glass Card */
+.premium-glass {
+  background: var(--glass);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Glowing Dynamic Buttons */
+.glow-btn {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  color: white;
+}
+
+.glow-btn:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 30px var(--accent-glow);
+  :root {
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent: #3b82f6;
+    --neon-blue: #00d2ff;
+  }
+
+  body {
+    /* Dynamic Mesh Background */
+    background: #030712;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.1) 0, transparent 50%);
+    min-height: 100vh;
+    color: white !important;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .premium-glass {
+    background: var(--glass);
+    backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .glow-btn {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    color: white;
+  }
+
+  .glow-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+  }
+
+  .hero-float { animation: float 6s ease-in-out infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+}
 </style>
 <header class="bg-blue-700 dark:bg-slate-800 text-white shadow-lg fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
   <div class="container mx-auto flex justify-between items-center py-4 px-6">
@@ -25,18 +113,19 @@
     
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center space-x-6">
-      <nav>
-        <ul class="flex space-x-4 lg:space-x-6 text-base font-semibold">
-          <li><a href="/" class="hover:text-blue-300 transition">{{ _('Home') }}</a></li>
-          <li><a href="/index" class="hover:text-blue-300 transition">{{ _('Prediction') }}</a></li>
-          <li><a href="/life" class="hover:text-blue-300 transition">{{ _('Lifestyle') }}</a></li>
-          <li><a href="/chatbot" class="hover:text-blue-300 transition">{{ _('Chatbot') }}</a></li>
-          <li><a href="/explore" class="hover:text-blue-300 transition">{{ _('Explore') }}</a></li>
-          <li><a href="/forum" class="hover:text-blue-300 transition">{{ _('Forum') }}</a></li>
-          <li><a href="/">Logout</a></li>
-        </ul>
-      </nav>
-      
+      <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] z-50 premium-glass h-16 flex items-center px-8 border border-white/10">
+    <div class="flex justify-between items-center w-full">
+        <a href="/" class="text-xl font-black tracking-tighter">Diabetes<span class="text-blue-500">Care</span></a>
+        <div class="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest opacity-70">
+            <a href="/index" class="hover:opacity-100 hover:text-blue-400 transition">Prediction</a>
+            <a href="/life" class="hover:opacity-100 hover:text-blue-400 transition">Lifestyle</a>
+            <a href="/forum" class="hover:opacity-100 hover:text-blue-400 transition">Forum</a>
+        </div>
+        <button class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+             <i class="fas fa-globe text-xs"></i>
+        </button>
+    </div>
+</nav>
       <!-- Dark Mode Toggle -->
       <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle p-2 rounded-lg hover:bg-blue-600 dark:hover:bg-slate-700 transition" aria-label="{{ _('Toggle dark mode') }}">
         <!-- Sun icon (shown in dark mode) -->

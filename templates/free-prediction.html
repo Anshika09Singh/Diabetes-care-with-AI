@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,17 +10,193 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body {
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-      background-repeat: repeat;
-      background-size: 200px 200px;
+    :root {
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.1);
     }
-  </style>
+    :root {
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background: #030712;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0, transparent 50%);
+    min-height: 100vh;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Correct Floating Navbar logic */
+.nav-floating {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+}
+
+/* High-Visibility Theme Toggle */
+.theme-glow-btn {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    color: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-glass {
+    background: var(--glass);
+    backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Cyber Terminal Inputs */
+.input-terminal {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    color: white;
+    transition: 0.3s;
+}
+
+.input-terminal:focus {
+    border-color: #00d2ff;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+    outline: none;
+}
+    body {
+        background: #030712;
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0, transparent 50%);
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Fixed Floating Navbar to match navbar.html logic */
+    .nav-floating {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1200px;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 0.75rem 2rem;
+    }
+
+    /* Make Theme Toggle Visible and Eye-Catchy */
+    .theme-glow-btn {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #60a5fa;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        transition: 0.3s;
+    }
+    
+    .theme-glow-btn:hover {
+        background: rgba(59, 130, 246, 0.2);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+        transform: rotate(15deg) scale(1.1);
+    }
+    /* Navigation Floating Dock */
+.nav-floating {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 9999; /* Ensures it stays above all other content */
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+}
+
+/* Theme Toggle Glow Effect */
+.theme-glow-btn {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    color: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-glow-btn:hover {
+    background: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+    transform: scale(1.1) rotate(15deg);
+}
+
+/* Ensure the main content doesn't get hidden behind the fixed nav */
+body {
+    padding-top: 100px; 
+}
+    .premium-glass {
+        background: var(--glass);
+        backdrop-filter: blur(25px) saturate(200%);
+        border: 1px solid var(--glass-border);
+        border-radius: 32px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .input-terminal {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        transition: 0.3s;
+    }
+
+    .input-terminal:focus {
+        border-color: #00d2ff;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+        outline: none;
+    }
+</style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 flex flex-col font-sans">
+  <nav class="nav-floating flex justify-between items-center shadow-2xl">
+    <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">🩺</span>
+        <span class="text-xl font-black tracking-tighter text-white">Diabetes<span class="text-blue-500">Care</span></span>
+    </a>
+
+    <div class="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest opacity-70">
+        <a href="/index" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Prediction') }}</a>
+        <a href="/life" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Lifestyle') }}</a>
+        <a href="/forum" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Forum') }}</a>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button onclick="toggleTheme()" class="theme-glow-btn w-10 h-10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest">
+            {{ current_language | upper }}
+        </button>
+    </div>
 
   <main class="flex-grow flex items-center justify-center p-8">
     <section class="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl max-w-lg w-full p-12 space-y-10">
@@ -129,8 +306,48 @@
         </p>
         </div>
         {% endif %}
+        <nav class="nav-floating flex justify-between items-center shadow-2xl">
+    <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">🩺</span>
+        <span class="text-xl font-black tracking-tighter">{{ _('Diabetes Care') }}</span>
+    </a>
+
+    <div class="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest opacity-70">
+        <a href="/index" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Prediction') }}</a>
+        <a href="/life" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Lifestyle') }}</a>
+        <a href="/forum" class="hover:opacity-100 hover:text-blue-400 transition">{{ _('Forum') }}</a>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button onclick="toggleTheme()" class="theme-glow-btn w-10 h-10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        
+        <button class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition">
+            {{ languages.get(current_language, 'EN') }}
+        </button>
+        
+    </div>
 
  
 </body>
+<script>
+    // Theme toggle logic
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('dark-mode');
+        updateThemeIcons();
+    }
 
+    function updateThemeIcons() {
+        const themeIcon = document.getElementById('theme-icon');
+        if (document.body.classList.contains('dark-mode')) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    }
+    </script>
 </html>

@@ -25,6 +25,253 @@
         }
       })();
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+   :root {
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* --- LIGHT MODE DEFAULTS --- */
+body {
+    background: #f8fafc; /* Soft white background */
+    background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
+    color: #1e293b; /* Dark slate text */
+    transition: all 0.3s ease;
+    padding-top: 110px; 
+}
+
+.nav-floating {
+    background: rgba(255, 255, 255, 0.8); /* Translucent white nav */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+}
+
+.premium-glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+/* --- DARK MODE OVERRIDES --- */
+.dark body {
+    background: #030712;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0, transparent 50%);
+    color: #ffffff;
+}
+
+.dark .nav-floating {
+    background: rgba(15, 23, 42, 0.85); /* Deep slate nav */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .premium-glass {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* Dark Mode (Activated by Toggle) */
+
+
+/* Input styles that work in both themes */
+.input-terminal {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: inherit;
+}
+
+.dark .input-terminal {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.nav-floating {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 9999;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+}
+
+/* Glowing Theme Toggle */
+.theme-glow-btn {
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid #3b82f6;
+    color: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cyber-Terminal Inputs */
+.input-terminal {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+.input-terminal:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+    outline: none;
+}
+
+/* High-Contrast Execution Button */
+.btn-execute {
+    background: linear-gradient(135deg, #ff8c00, #f83600);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
+  /* Futuristic Glassmorphism Card */
+  .premium-glass {
+    background: var(--glass);
+    backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+}
+
+.input-terminal {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+  /* Glowing Button with Hover Scale */
+  .glow-btn {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .glow-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+  }
+  /* Fix the positioning to "Fit" the page correctly */
+body {
+    padding-top: 100px; /* Space for the floating navbar */
+    overflow-x: hidden;
+}
+.dynamic-heading {
+    color: #1e293b; /* Dark Slate for Light Mode */
+    background: linear-gradient(to right, #1e293b, #64748b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.3s ease;
+}
+
+/* Dark Theme Header Override */
+.dark .dynamic-heading {
+    color: #ffffff; /* White for Dark Mode */
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Subtext visibility */
+.dynamic-subtext {
+    color: #64748b; /* Gray-blue for Light Mode */
+}
+
+.dark .dynamic-subtext {
+    color: #60a5fa; /* Bright Blue for Dark Mode */
+}
+/* THE CYBER-TERMINAL THEME */
+.nav-floating {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 9999; /* Higher than mesh to prevent disappearing */
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+}
+/* Primary Action Button - Theme Aware */
+.btn-primary-dynamic {
+    background: linear-gradient(135deg, #2563eb, #7c3aed); /* Blue to Purple */
+    color: white !important;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary-dynamic:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
+}
+
+/* Specific Glow for Dark Mode */
+.dark .btn-primary-dynamic {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Secondary Action Button - Theme Aware */
+.btn-secondary-dynamic {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1e293b;
+    transition: all 0.3s ease;
+}
+
+.dark .btn-secondary-dynamic {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+}
+
+.btn-secondary-dynamic:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #2563eb;
+}
+
+.dark .btn-secondary-dynamic:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+/* Ensure Theme Toggle is always visible */
+.theme-glow-btn {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid #3b82f6 !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+  /* 3D Floating Animation */
+  .hero-3d-float { animation: float3d 8s ease-in-out infinite; }
+  @keyframes float3d {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(2deg); }
+  }
+
+
+  .input-terminal:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  }
+</style>
     <style>
       * {
         transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -84,85 +331,31 @@
   <body
     class="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300"
   >
-    <!-- Navbar -->
-    <nav
-      class="bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-slate-800 dark:to-slate-900 text-white shadow-lg sticky top-0 z-50"
-    >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <a href="/" class="flex items-center gap-2">
-            <span class="text-2xl">⚕️</span>
-            <span class="text-xl font-bold"
-              >Diabetes<span class="text-cyan-300">Care</span></span
-            >
-          </a>
-          <div class="hidden md:flex items-center gap-6">
-            <a href="/" class="hover:text-cyan-300 transition font-medium"
-              >{{ _('Home') }}</a
-            >
-            <a href="/index" class="text-cyan-300 font-bold"
-              >{{ _('Prediction') }}</a
-            >
-            <a href="/life" class="hover:text-cyan-300 transition font-medium"
-              >{{ _('Lifestyle') }}</a
-            >
-            <a
-              href="/chatbot"
-              class="hover:text-cyan-300 transition font-medium"
-              >{{ _('Chatbot') }}</a
-            >
-            <a
-              href="/explore"
-              class="hover:text-cyan-300 transition font-medium"
-              >{{ _('Explore') }}</a
-            >
-            <a href="/forum" class="hover:text-cyan-300 transition font-medium"
-              >{{ _('Forum') }}</a
-            >
-          </div>
-          <div class="flex items-center gap-3">
-            <button
-              onclick="toggleTheme()"
-              class="theme-toggle p-2 rounded-lg hover:bg-white/10 transition"
-              aria-label="Toggle dark mode"
-            >
-              <svg
-                id="theme-icon-sun"
-                class="w-5 h-5 hidden"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
-              <svg
-                id="theme-icon-moon"
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+
+    <nav class="nav-floating flex justify-between items-center shadow-2xl">
+    <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">🩺</span>
+        <span class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">Diabetes<span class="text-blue-500">Care</span></span>
+    </a>
+<div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
+    <a href="/" class="hover:text-blue-500 transition">{{ _('Home') }}</a>
+    <a href="/index" class="hover:text-blue-500 transition">{{ _('Prediction') }}</a>
+    <a href="/life" class="hover:text-blue-500 transition">{{ _('Lifestyle') }}</a>
+    <a href="/chatbot" class="hover:text-blue-500 transition">{{ _('Chatbot') }}</a>
+    <a href="/explore" class="hover:text-blue-500 transition">{{ _('Explore') }}</a>
+    <a href="/forum" class="hover:text-blue-500 transition">{{ _('Forum') }}</a>
+</div>
+
+    <div class="flex items-center gap-4">
+        <button onclick="toggleTheme()" class="theme-glow-btn w-10 h-10 rounded-xl flex items-center justify-center border border-blue-500/30">
+            <i class="fas fa-moon text-blue-500 dark:text-yellow-400" id="theme-icon"></i>
+        </button>
+    </div>
+</nav>
 
     <!-- Hero Section -->
     <section
-      class="bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 py-12"
+      
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="fade-in">
@@ -183,13 +376,12 @@
               />
             </svg>
           </div>
-          <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
-            {{ _('Diabetes Prediction') }}
-          </h1>
-          <p class="text-blue-100 text-lg max-w-2xl mx-auto">
-            {{ _('Enter your health metrics to get an AI-powered diabetes risk
-            assessment') }}
-          </p>
+          <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-4 dynamic-heading">
+    {{ _('AI Diagnostics Terminal') }}
+</h1>
+<p class="font-bold tracking-[0.2em] text-[10px] uppercase opacity-70 dynamic-subtext">
+    {{ _('Neural Bio-Metric Analysis Initialized') }}
+</p>
         </div>
       </div>
     </section>
@@ -624,15 +816,9 @@
           </div>
         </div>
 
-        <button type="submit"
-          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-extrabold rounded-2xl py-4 shadow-lg transition-transform duration-300 hover:scale-105 flex justify-center items-center gap-3 select-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2" aria-hidden="true" focusable="false">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m0 0L8 12m4 8l4-8" />
-          </svg>
-          {{ _('Predict') }}
-        </button>
+        <button type="submit" class="w-full btn-primary-dynamic py-5 rounded-2xl flex justify-center items-center gap-4 text-xl mt-6 shadow-2xl">
+    <i class="fas fa-microscope"></i> {{ _('Predict') }}
+</button>
       </form>
 
       {% if prediction_text %}
@@ -736,14 +922,16 @@
       </div>
       {% endif %}
 
-        <a href="/explore"
-        class="mt-8 block mx-auto max-w-xl text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl py-4 shadow-md transition-transform duration-300 hover:scale-105 select-none">
-        📊 {{ _('Explore Dataset') }}
-      </a>
-      <a href="/life"
-        class="mt-8 block mx-auto max-w-xl text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl py-4 shadow-md transition-transform duration-300 hover:scale-105 select-none">
-        📊 {{ _('CHECK YOUR LIFESTYLE') }}
-      </a>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+    <a href="/explore" class="btn-secondary-dynamic p-6 rounded-2xl text-center group">
+        <i class="fas fa-chart-line mb-3 text-2xl group-hover:scale-110 transition-transform"></i>
+        <span class="block text-[10px] font-black uppercase tracking-widest">{{ _('Explore Data') }}</span>
+    </a>
+    <a href="/life" class="btn-secondary-dynamic p-6 rounded-2xl text-center group">
+        <i class="fas fa-file-medical-alt mb-3 text-2xl group-hover:scale-110 transition-transform"></i>
+        <span class="block text-[10px] font-black uppercase tracking-widest">{{ _('Lifestyle Check') }}</span>
+    </a>
+</div>
     </section>
   </main>
 
@@ -885,7 +1073,7 @@
           alert("PDF generation is not available.");
         }
       }
-    }
+    
 
     // Email Report Functions
     function toggleEmailForm() {
@@ -989,6 +1177,12 @@
         });
       }
     });
+    function toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    const icon = document.getElementById('theme-icon');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+}
   </script>
 </body>
 </html>

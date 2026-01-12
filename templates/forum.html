@@ -4,172 +4,176 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>{{ _('Diabetes Care Forum') }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
+  <script>
+    // Critical: Apply theme before render to prevent flickering
+    (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+            document.documentElement.classList.add("dark");
+        }
+    })();
+</script>
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+<style>
+    :root {
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.1);
     }
 
-    .fade-in {
-      animation: fadeIn 0.6s ease-out forwards;
+    body {
+        background: #f8fafc; /* Light Theme Default */
+        background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
+        color: #1e293b; /* Dark text for light mode */
+        font-family: 'Inter', sans-serif;
+        padding-top: 110px; 
+        transition: background 0.3s ease, color 0.3s ease;
     }
 
-    .post-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .dark body {
+        background: #030712 !important; /* Dark Theme Neural Mesh */
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0, transparent 50%) !important;
+        color: #ffffff; /* White text for dark mode */
     }
 
-    .post-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 25px rgba(59, 130, 246, 0.15);
+    .premium-glass {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(25px) saturate(200%);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 32px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: background 0.3s ease;
     }
 
-    .btn-primary {
-      transition: all 0.2s ease;
+    .dark .premium-glass {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    /* Neural Mesh Dark Mode */
+
+    .nav-floating {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1200px;
+        z-index: 9999;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        padding: 0.75rem 2rem;
     }
 
-    .btn-primary:hover {
-      transform: scale(1.05);
-      background-color: #2563eb;
+    .dark .nav-floating {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid var(--glass-border);
     }
 
-    .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3b82f6;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
+    /* Theme-Aware Cards */
+  
+    .input-terminal {
+        background: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        color: inherit;
+        border-radius: 1rem;
+        transition: 0.3s;
     }
 
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
+    .dark .input-terminal {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .notification-dropdown {
-      max-height: 400px;
-      overflow-y: auto;
+    .btn-execute {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: white !important;
+        transition: 0.4s;
     }
 
-    .notification-item:hover {
-      background-color: #f3f4f6;
+    .btn-execute:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
     }
 
-    .notification-unread {
-      background-color: #eff6ff;
-      border-left: 3px solid #3b82f6;
+    .theme-glow-btn {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
     }
-
-    .modal-overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .toast {
-      animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 4.7s forwards;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body class="bg-gradient-to-br from-blue-50 to-white text-gray-800 min-h-screen flex flex-col font-sans">
-  <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center py-5 px-6">
-      <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide">🩺 {{ _('Diabetes Care') }}</h1>
+  <body class="min-h-screen flex flex-col transition-colors duration-300">
 
-      <div class="flex items-center gap-4">
-        <!-- Desktop Nav -->
-        <nav class="hidden md:block">
-          <ul class="flex space-x-4 md:space-x-6 text-lg font-semibold">
-            <li><a href="/index" class="hover:text-blue-300 transition">Prediction</a></li>
-            <li><a href="/life" class="hover:text-blue-300 transition">Lifestyle Check</a></li>
-            <li><a href="/chatbot" class="hover:text-blue-300 transition">Chatbot</a></li>
-            <li><a href="/explore" class="hover:text-blue-300 transition">Explore Data</a></li>
-            <li><a href="/forum" class="hover:text-blue-300 transition font-bold">Forum</a></li>
-          </ul>
-        </nav>
+    <nav class="nav-floating flex justify-between items-center shadow-2xl">
+        <a href="/" class="flex items-center gap-2 group">
+            <span class="text-2xl transition-transform group-hover:scale-110">🩺</span>
+            <span class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">
+                Diabetes<span class="text-blue-500">Care</span>
+            </span>
+        </a>
 
-        <!-- Notification Bell -->
-        <div class="relative">
-          <button id="notificationBell" class="relative p-2 hover:bg-blue-600 rounded-full transition" type="button">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-              </path>
-            </svg>
-            <span id="notificationBadge"
-              class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
-          </button>
-          <div id="notificationDropdown"
-            class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
-            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-              <h3 class="font-semibold text-gray-800" id="notif-heading">{{ _('Notifications') }}</h3>
-              <div class="flex gap-2">
-                <button id="markAllRead" class="text-xs text-blue-600 hover:text-blue-800" type="button">Mark all
-                  read</button>
-                <button id="openSettings" class="text-gray-500 hover:text-gray-700" type="button">⚙️</button>
-              </div>
-            </div>
-            <div id="notificationList" class="notification-dropdown">
-              <p class="p-4 text-gray-500 text-center text-sm">No notifications yet</p>
-            </div>
-          </div>
+        <div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
+            <a href="/" class="hover:text-blue-500 transition">Home</a>
+            <a href="/index" class="hover:text-blue-500 transition">Prediction</a>
+            <a href="/life" class="hover:text-blue-500 transition">Lifestyle</a>
+            <a href="/chatbot" class="hover:text-blue-500 transition">Chatbot</a>
+            <a href="/explore" class="hover:text-blue-500 transition">Explore</a>
+            <a href="/forum" class="text-blue-500 transition">Forum</a>
         </div>
 
-        <!-- Mobile Hamburger Button -->
-        <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleTheme()" class="theme-glow-btn w-10 h-10 rounded-xl flex items-center justify-center border border-blue-500/30">
+                <i class="fas fa-moon text-blue-500 dark:text-yellow-400" id="theme-icon"></i>
+            </button>
+            <button id="notificationBell" class="relative p-2 hover:bg-blue-600/10 rounded-full transition">
+                <i class="fas fa-bell text-slate-600 dark:text-slate-400"></i>
+                <span id="notificationBadge" class="hidden absolute top-0 right-0 bg-red-500 text-[8px] text-white rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            </button>
+        </div>
+    </nav>
 
-    <!-- Mobile Menu Drawer -->
-    <div id="mobile-menu" class="hidden md:hidden bg-blue-800 border-t border-blue-600">
-      <ul class="flex flex-col space-y-2 p-4 text-lg font-semibold">
-        <li><a href="/index" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Prediction</a></li>
-        <li><a href="/life" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Lifestyle Check</a></li>
-        <li><a href="/chatbot" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Chatbot</a></li>
-        <li><a href="/explore" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Explore Data</a></li>
-        <li><a href="/forum" class="block py-2 px-4 hover:bg-blue-700 rounded transition font-bold">Forum</a></li>
-      </ul>
-    </div>
-  </header>
+    <header class="container mx-auto text-center mt-8 px-6">
+    <h1 class="text-5xl md:text-6xl font-black tracking-tighter uppercase mb-4 text-slate-800 dark:text-white">
+        {{ _('Community Terminal') }}
+    </h1>
+    <p class="text-blue-600 dark:text-blue-400 font-bold tracking-[0.2em] text-[10px] uppercase opacity-70">
+        {{ _('Neural Network • Ask • Support') }}
+    </p>
+</header>
+
+    <main class="flex-grow container mx-auto px-6 py-10 max-w-4xl space-y-12">
+        <section class="premium-glass p-8 shadow-2xl space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">
+                {{ _('Initialize Broadcast') }}
+            </h2>
+            <form id="postForm" class="flex flex-col gap-4">
+                <textarea id="postContent" rows="4"
+                    class="input-terminal p-6 resize-none focus:outline-none focus:ring-4 focus:ring-blue-300 placeholder-slate-400 dark:placeholder-slate-600"
+                    placeholder="Type your story..."></textarea>
+                <div class="flex justify-between items-center">
+                    <button type="submit" class="btn-execute py-3 px-8 rounded-2xl shadow-lg">
+                        <i class="fas fa-paper-plane mr-2"></i> {{ _('Publish to Network') }}
+                    </button>
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest" id="charCount">0/500</span>
+                </div>
+            </form>
+        </section>
+
+        <div id="postsList" class="space-y-6"></div>
+    </main>
 
   <section class="bg-blue-700 text-white py-12">
     <div class="container mx-auto text-center">
@@ -567,7 +571,7 @@
         posts.forEach((post, index) => {
           const time = new Date(post.timestamp).toLocaleString();
           const postEl = document.createElement('article');
-          postEl.className = "post-card p-6 bg-white rounded-2xl shadow-md border border-gray-100 fade-in transition-all duration-300";
+          postEl.className = "premium-glass p-8 shadow-lg fade-in transition-all duration-300 text-slate-800 dark:text-white";
           postEl.setAttribute('data-post-id', post.id);
           postEl.setAttribute('aria-posinset', index + 1);
           postEl.setAttribute('aria-setsize', posts.length);
@@ -644,6 +648,21 @@
         mobileMenu.classList.toggle('hidden');
       });
     }
+    function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    const icon = document.getElementById('theme-icon');
+    
+    if (icon) {
+        // Swaps the moon for a sun and changes the color
+        if (isDark) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+}
   </script>
 </body>
 
