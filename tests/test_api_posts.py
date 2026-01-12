@@ -5,41 +5,46 @@ Feature: forum-search-filter
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
 import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app import app, posts
+from app import app
+from models import db, Post
 
 
 @pytest.fixture
 def client():
-    """Create test client."""
+    """Create test client with in-memory database."""
     app.config['TESTING'] = True
-    with app.test_client() as client:
-        yield client
-
-
-@pytest.fixture(autouse=True)
-def clear_posts():
-    """Clear posts before each test."""
-    posts.clear()
-    yield
-    posts.clear()
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    
+    with app.app_context():
+        db.create_all()
+        with app.test_client() as test_client:
+            yield test_client
+        db.drop_all()
 
 
 @pytest.fixture
-def sample_posts():
+def sample_posts(client):
     """Add sample posts for testing."""
-    test_posts = [
-        {'id': 1, 'content': 'Managing diabetes with diet', 'timestamp': '2025-01-15T10:00:00Z'},
-        {'id': 2, 'content': 'Exercise tips for blood sugar control', 'timestamp': '2025-01-14T09:00:00Z'},
-        {'id': 3, 'content': 'My insulin pump experience', 'timestamp': '2025-01-13T08:00:00Z'},
-        {'id': 4, 'content': 'Diet and nutrition questions', 'timestamp': '2025-01-12T07:00:00Z'},
-        {'id': 5, 'content': 'New to diabetes diagnosis', 'timestamp': '2025-01-11T06:00:00Z'},
+    test_posts_data = [
+        {'content': 'Managing diabetes with diet', 'timestamp': datetime(2025, 1, 15, 10, 0, 0, tzinfo=timezone.utc)},
+        {'content': 'Exercise tips for blood sugar control', 'timestamp': datetime(2025, 1, 14, 9, 0, 0, tzinfo=timezone.utc)},
+        {'content': 'My insulin pump experience', 'timestamp': datetime(2025, 1, 13, 8, 0, 0, tzinfo=timezone.utc)},
+        {'content': 'Diet and nutrition questions', 'timestamp': datetime(2025, 1, 12, 7, 0, 0, tzinfo=timezone.utc)},
+        {'content': 'New to diabetes diagnosis', 'timestamp': datetime(2025, 1, 11, 6, 0, 0, tzinfo=timezone.utc)},
     ]
-    posts.extend(test_posts)
-    return test_posts
+    
+    with app.app_context():
+        for post_data in test_posts_data:
+            post = Post(content=post_data['content'], timestamp=post_data['timestamp'])
+            db.session.add(post)
+        db.session.commit()
+    
+    return test_posts_data
 
 
 class TestGetPosts:
@@ -146,16 +151,18 @@ class TestGetPostsValidation:
     """Tests for input validation on GET /api/posts."""
     
     def test_invalid_page_negative(self, client):
-        """Test error for negative page number."""
+        """Test that negative page number is corrected to 1."""
         response = client.get('/api/posts?page=-1')
-        assert response.status_code == 400
+        assert response.status_code == 200
         data = json.loads(response.data)
-        assert 'error' in data
+        assert data['pagination']['page'] == 1
     
     def test_invalid_page_zero(self, client):
-        """Test error for page=0."""
+        """Test that page=0 is corrected to 1."""
         response = client.get('/api/posts?page=0')
-        assert response.status_code == 400
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data['pagination']['page'] == 1
     
     def test_invalid_page_non_integer(self, client):
         """Test error for non-integer page."""
@@ -163,14 +170,18 @@ class TestGetPostsValidation:
         assert response.status_code == 400
     
     def test_invalid_per_page_zero(self, client):
-        """Test error for per_page=0."""
+        """Test that per_page=0 is corrected to default 10."""
         response = client.get('/api/posts?per_page=0')
-        assert response.status_code == 400
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data['pagination']['per_page'] == 10
     
     def test_invalid_per_page_exceeds_max(self, client):
-        """Test error for per_page > 50."""
+        """Test that per_page > 50 is corrected to default 10."""
         response = client.get('/api/posts?per_page=100')
-        assert response.status_code == 400
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data['pagination']['per_page'] == 10
     
     def test_invalid_date_format(self, client):
         """Test error for invalid date format."""
