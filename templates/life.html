@@ -210,13 +210,15 @@
               placeholder="{{ _('Enter your height in cm') }}"
               inputmode="decimal"
               autocomplete="height"
-              class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
             />
           </div>
 
           <div>
-            <label for="bmi" class="block font-semibold mb-1 text-gray-700"
+            <label 
+              for="bmi" 
+              class="block font-semibold mb-1 text-gray-700 dark:text-gray-300"
               >{{ _('BMI (Body Mass Index)') }}</label
             >
             <input
@@ -229,7 +231,7 @@
               placeholder="{{ _('Enter your BMI') }}"
               inputmode="decimal"
               aria-describedby="bmi-hint"
-              class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
             />
             <p id="bmi-hint" class="text-xs text-gray-500 mt-1">
@@ -238,13 +240,15 @@
           </div>
 
           <div>
-            <label for="activity" class="block font-semibold mb-1 text-gray-700"
+            <label 
+              for="activity" 
+              class="block font-semibold mb-1 text-gray-700 dark:text-gray-300"
               >{{ _('Physical Activity Level') }}</label
             >
             <select
               id="activity"
               name="activity"
-              class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               required
             >
               <option value="" disabled selected>
